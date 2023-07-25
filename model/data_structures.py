@@ -1,3 +1,4 @@
+threshold = 0.1
 
 
 class Node:
@@ -66,6 +67,24 @@ class Node:
             return None
         return self.right.find(value)
 
+    def find_in_range(self, min_value, max_value):
+        if min_value <= self.value <= max_value:
+            left_values = []
+            right_values = []
+            if self.left is not None:
+                left_values = self.left.find_in_range(min_value, max_value) or []
+            if self.right is not None:
+                right_values = self.right.find_in_range(min_value, max_value) or []
+            return left_values + (self.data or []) + right_values
+
+        if min_value < self.value:
+            if self.left is not None:
+                return self.left.find_in_range(min_value, max_value)
+
+        if max_value > self.value:
+            if self.right is not None:
+                return self.right.find_in_range(min_value, max_value)
+
     def inorder(self, values):
         if self.left is not None:
             self.left.inorder(values)
@@ -89,6 +108,9 @@ class BinarySearchTree:
 
     def find(self, value):
         return self.root.find(value)
+
+    def fuzzy_find(self, value):
+        return self.root.find_in_range(value - threshold, value + threshold)
 
     def print(self):
         print(self.root.inorder([]))

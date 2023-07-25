@@ -19,9 +19,19 @@ class LongTermMemory:
         self._dominance_tree.print()
 
     def lookup(self, valence, arousal, dominance):
-        print(f"Inside lookup {valence}, {arousal}, {dominance}")
-
-        valence_values = self._valence_tree.find(valence)
-        arousal_values = self._arousal_tree.find(arousal)
-        dominance_values = self._dominance_tree.find(dominance)
+        #TODO: implememnt a fuzzy find where if an exact match isn't found it looks for values close enough
+        valence_values = self._valence_tree.fuzzy_find(valence) or []
+        # print(valence_values)
+        arousal_values = self._arousal_tree.fuzzy_find(arousal) or []
+        # print(arousal_values)
+        dominance_values = self._dominance_tree.fuzzy_find(dominance) or []
+        # print(dominance_values)
+        # print("Intersection of valence and arousal")
+        # print(set(valence_values).intersection(set(arousal_values)))
+        # print("Intersection of dominance and arousal")
+        # print(set(arousal_values).intersection(set(dominance_values)))
+        # print("Intersection of valence and dominance")
+        # print(set(valence_values).intersection(set(dominance_values)))
+        # print("Intersection of valence and arousal and dominance")
+        # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
