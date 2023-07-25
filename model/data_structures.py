@@ -1,3 +1,4 @@
+threshold = 0.1
 
 
 class Node:
@@ -5,15 +6,18 @@ class Node:
         self.left = None
         self.right = None
         self.value = value
-        self.data = data
+        self.data = []
+        if data:
+            self.data.append(data)
 
     def insert(self, value, data):
         if not self.value:
             self.value = value
-            self.data = data
+            self.data.append(data)
             return
 
         if self.value == value:
+            self.data.append(data)
             return
 
         if value < self.value:
@@ -45,6 +49,8 @@ class Node:
         while min_larger_node.left:
             min_larger_node = min_larger_node.left
         self.value = min_larger_node.value
+        self.data = min_larger_node.data
+
         self.right = self.right.delete(min_larger_node.value)
         return self
 
@@ -55,11 +61,38 @@ class Node:
         if value < self.value:
             if self.left is None:
                 return None
-            return self.left.exists(value)
+            return self.left.find(value)
 
         if self.right is None:
             return None
-        return self.right.exists(value)
+        return self.right.find(value)
+
+    def find_in_range(self, min_value, max_value):
+        if min_value <= self.value <= max_value:
+            left_values = []
+            right_values = []
+            if self.left is not None:
+                left_values = self.left.find_in_range(min_value, max_value) or []
+            if self.right is not None:
+                right_values = self.right.find_in_range(min_value, max_value) or []
+            return left_values + (self.data or []) + right_values
+
+        if min_value < self.value:
+            if self.left is not None:
+                return self.left.find_in_range(min_value, max_value)
+
+        if max_value > self.value:
+            if self.right is not None:
+                return self.right.find_in_range(min_value, max_value)
+
+    def inorder(self, values):
+        if self.left is not None:
+            self.left.inorder(values)
+        if self.value is not None:
+            values.append(self.data)
+        if self.right is not None:
+            self.right.inorder(values)
+        return values
 
 
 class BinarySearchTree:
@@ -72,3 +105,12 @@ class BinarySearchTree:
 
     def remove(self, value):
         self.root.delete(value)
+
+    def find(self, value):
+        return self.root.find(value)
+
+    def fuzzy_find(self, value):
+        return self.root.find_in_range(value - threshold, value + threshold)
+
+    def print(self):
+        print(self.root.inorder([]))
