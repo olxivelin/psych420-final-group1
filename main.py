@@ -7,13 +7,14 @@ from model.utils import train
 if __name__ == '__main__':
     ltm = LongTermMemory()
     stm = ShortTermMemory(ltm)
-    sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)
-
-    for word in sensory.word_mapping.keys():
-        sensory.learn(word)
+    # sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)
+    sensory = SensoryMemory("./data/test.csv", stm)
+    for i in range(100):
+        for word in sensory.word_mapping.keys():
+            sensory.learn(word)
 
     # train("./data/BRM-emot-submit.csv", ltm)
-    # ltm.print()
+    ltm.print()
 
     # data = sensory.encode_input("cat")
     # print(data)

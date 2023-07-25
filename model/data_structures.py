@@ -14,11 +14,13 @@ class Node:
     def insert(self, value, data):
         if not self.value:
             self.value = value
-            self.data.append(data)
+            if data not in self.data:
+                self.data.append(data)
             return
 
         if self.value == value:
-            self.data.append(data)
+            if data not in self.data:
+                self.data.append(data)
             return
 
         if value < self.value:
@@ -92,7 +94,7 @@ class Node:
         if self.left is not None:
             self.left.inorder(values)
         if self.value is not None:
-            values.append(self.data)
+            values.append([self.value, self.data])
         if self.right is not None:
             self.right.inorder(values)
         return values

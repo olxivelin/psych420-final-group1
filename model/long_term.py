@@ -20,6 +20,7 @@ class Factor:
         self._tree.add(value, data)
 
     def print(self):
+        print(self._weight)
         self._tree.print()
 
     def closest_matches(self, value):
@@ -31,9 +32,16 @@ class Factor:
             if item:
                 if self.get_error(item, value) <= ERROR_THRESHOLD:
                     closest_matches += item[0]
-        # print(f"Closest Matches: {closest_matches}")
+        print(f"Closest Matches: {closest_matches}")
         return closest_matches
 
+    def adjust_weight(self, word, value, was_correct):
+        matches = self.closest_matches(value)
+        if word in matches:
+            self._weight += 0.0001
+        else:
+            if not was_correct:
+                self._weight -= 0.0001
 
 class LongTermMemory:
 
@@ -69,13 +77,12 @@ class LongTermMemory:
         # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
 
-    # TODO: to learn we probably need to send through the word not just the encoded word?
-    # how does this map to how we learn? Maybe it doesn't?
     def learn(self, word, valence, arousal, dominance):
         self.prime(word, valence, arousal, dominance)
         return self.lookup(valence, arousal, dominance)
 
-    def feedback(self, word, encoded_word, was_correct):
-        # TODO: do something with the info that we have about the result from our lookup.
-        # adjust the weights or something?
-        print(f"Word: {word} Encoding: {encoded_word} Was Correct: {was_correct}")
+    def feedback(self, word, valence, arousal, dominance, was_correct):
+        self._valence_factor.adjust_weight(word, valence, was_correct)
+        self._arousal_factor.adjust_weight(word, arousal, was_correct)
+        self._dominance_factor.adjust_weight(word, dominance, was_correct)
+        # print(f"Word: {word} Encoding: {encoded_word} Was Correct: {was_correct}")
