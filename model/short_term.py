@@ -1,3 +1,4 @@
+# TODO: add the concept of time passing and have items age out of short term memory.
 
 class ShortTermMemory:
 
@@ -16,11 +17,9 @@ class ShortTermMemory:
         if len(self.registers) > 7:
             self.registers.pop(0)
 
-#TODO: add the concept of time passing and have items age out of short term memory.
-
     def fuzz(self, valence, arousal, dominance):
-
         index = self.registers.index((valence, arousal, dominance))
+        # TODO: I just picked a random equation here, is there something better to do here?
         fuzz_factor = (7 - index) / 49.0
         return valence + fuzz_factor, arousal + fuzz_factor, dominance + fuzz_factor
 

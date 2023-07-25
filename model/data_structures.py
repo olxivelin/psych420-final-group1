@@ -1,4 +1,5 @@
-threshold = 0.1
+# Used to look for data that are near the value we have.
+FUZZ_THRESHOLD = 0.1
 
 
 class Node:
@@ -110,7 +111,7 @@ class BinarySearchTree:
         return self.root.find(value)
 
     def fuzzy_find(self, value):
-        return self.root.find_in_range(value - threshold, value + threshold)
+        return self.root.find_in_range(value - FUZZ_THRESHOLD, value + FUZZ_THRESHOLD)
 
     def print(self):
         print(self.root.inorder([]))

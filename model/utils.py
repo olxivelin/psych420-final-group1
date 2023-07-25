@@ -1,8 +1,11 @@
 import csv
 
+#TODO: This could maybe move into the memory models as a "learn" function?
 
 def train(data_file, long_term_memory):
 
+    # TODO: Rather than just priming LTM directly, build a back prop
+    # method to update the weights (and thresholds?)
     with open(data_file, newline='') as csvfile:
         word_reader = csv.DictReader(csvfile)
 
