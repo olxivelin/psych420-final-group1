@@ -75,7 +75,7 @@ class Node:
                 left_values = self.left.find_in_range(min_value, max_value) or []
             if self.right is not None:
                 right_values = self.right.find_in_range(min_value, max_value) or []
-            return left_values + (self.data or []) + right_values
+            return left_values + ([[self.data, self.value]] or []) + right_values
 
         if min_value < self.value:
             if self.left is not None:

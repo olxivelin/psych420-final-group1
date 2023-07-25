@@ -1,37 +1,68 @@
 from .data_structures import BinarySearchTree
 
+ERROR_THRESHOLD = 1
+
+class Factor:
+    def __init__(self):
+        self._tree = BinarySearchTree()
+        self._weight = 1
+
+    def get_error(self, item, value):
+        error = abs((item[1] - value) * self._weight)
+        print(error)
+        return error
+
+    def add_item(self, value, data):
+        self._tree.add(value, data)
+
+    def print(self):
+        self._tree.print()
+
+    def closest_matches(self, value):
+        values = self._tree.fuzzy_find(value) or [[], 0]
+        # values.sort(key=lambda x: self.get_error(x, value))
+
+        closest_matches = []
+        for item in values:
+            if self.get_error(item, value) < ERROR_THRESHOLD:
+                closest_matches += values[0][0]
+        print(f"Closest Matches: {closest_matches}")
+        return closest_matches
+
 
 class LongTermMemory:
 
     def __init__(self):
-        self._valence_tree = BinarySearchTree()
-        self._dominance_tree = BinarySearchTree()
-        self._arousal_tree = BinarySearchTree()
+        self._valence_factor = Factor()
+        self._dominance_factor = Factor()
+        self._arousal_factor = Factor()
 
     def prime(self, data, valance, dominance, arousal):
-        self._valence_tree.add(valance, data)
-        self._dominance_tree.add(dominance, data)
-        self._arousal_tree.add(arousal, data)
+        self._valence_factor.add_item(valance, data)
+        self._dominance_factor.add_item(dominance, data)
+        self._arousal_factor.add_item(arousal, data)
 
     def print(self):
-        self._valence_tree.print()
-        self._arousal_tree.print()
-        self._dominance_tree.print()
+        self._valence_factor.print()
+        self._dominance_factor.print()
+        self._arousal_factor.print()
+
+
 
     def lookup(self, valence, arousal, dominance):
-        #TODO: implememnt a fuzzy find where if an exact match isn't found it looks for values close enough
-        valence_values = self._valence_tree.fuzzy_find(valence) or []
-        # print(valence_values)
-        arousal_values = self._arousal_tree.fuzzy_find(arousal) or []
-        # print(arousal_values)
-        dominance_values = self._dominance_tree.fuzzy_find(dominance) or []
-        # print(dominance_values)
-        # print("Intersection of valence and arousal")
-        # print(set(valence_values).intersection(set(arousal_values)))
-        # print("Intersection of dominance and arousal")
-        # print(set(arousal_values).intersection(set(dominance_values)))
-        # print("Intersection of valence and dominance")
-        # print(set(valence_values).intersection(set(dominance_values)))
-        # print("Intersection of valence and arousal and dominance")
-        # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
+
+        valence_values = self._valence_factor.closest_matches(valence)
+        print(f"Valence: {valence_values}")
+        arousal_values = self._arousal_factor.closest_matches(arousal)
+        print(f"Arousal: {arousal_values}")
+        dominance_values = self._dominance_factor.closest_matches(dominance)
+        print(f"Dominance: {dominance_values}")
+        print("Intersection of valence and arousal")
+        print(set(valence_values).intersection(set(arousal_values)))
+        print("Intersection of dominance and arousal")
+        print(set(arousal_values).intersection(set(dominance_values)))
+        print("Intersection of valence and dominance")
+        print(set(valence_values).intersection(set(dominance_values)))
+        print("Intersection of valence and arousal and dominance")
+        print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
