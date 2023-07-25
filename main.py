@@ -9,7 +9,10 @@ if __name__ == '__main__':
     stm = ShortTermMemory(ltm)
     sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)
 
-    train("./data/BRM-emot-submit.csv", ltm)
+    for word in sensory.word_mapping.keys():
+        sensory.learn(word)
+
+    # train("./data/BRM-emot-submit.csv", ltm)
     # ltm.print()
 
     # data = sensory.encode_input("cat")

@@ -2,7 +2,7 @@ from .data_structures import BinarySearchTree
 
 # TODO: not sure about this, it is being used to allow multiple value lists to be returned if
 # they are all within the threshold amount.
-ERROR_THRESHOLD = 0.1
+ERROR_THRESHOLD = 0.08
 
 
 class Factor:
@@ -28,8 +28,9 @@ class Factor:
 
         closest_matches = []
         for item in values:
-            if self.get_error(item, value) <= ERROR_THRESHOLD:
-                closest_matches += item[0]
+            if item:
+                if self.get_error(item, value) <= ERROR_THRESHOLD:
+                    closest_matches += item[0]
         # print(f"Closest Matches: {closest_matches}")
         return closest_matches
 
@@ -67,3 +68,14 @@ class LongTermMemory:
         # print("Intersection of valence and arousal and dominance")
         # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
+
+    # TODO: to learn we probably need to send through the word not just the encoded word?
+    # how does this map to how we learn? Maybe it doesn't?
+    def learn(self, word, valence, arousal, dominance):
+        self.prime(word, valence, arousal, dominance)
+        return self.lookup(valence, arousal, dominance)
+
+    def feedback(self, word, encoded_word, was_correct):
+        # TODO: do something with the info that we have about the result from our lookup.
+        # adjust the weights or something?
+        print(f"Word: {word} Encoding: {encoded_word} Was Correct: {was_correct}")

@@ -30,3 +30,10 @@ class ShortTermMemory:
     def print(self):
         for item in self.registers:
             print(f"Item {item} with fuzz factor {self.fuzz(*item)}")
+
+    def learn(self, word, encoded_word):
+        self.add(encoded_word)
+        return self.long_term_memory.learn(word, *encoded_word)
+
+    def feedback(self, word, encoded_word, was_correct):
+        self.long_term_memory.feedback(word, encoded_word, was_correct)

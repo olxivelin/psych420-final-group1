@@ -69,6 +69,8 @@ class Node:
         return self.right.find(value)
 
     def find_in_range(self, min_value, max_value):
+        if self.value is None:
+            return
         if min_value <= self.value <= max_value:
             left_values = []
             right_values = []
