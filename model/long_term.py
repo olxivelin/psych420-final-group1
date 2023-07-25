@@ -36,6 +36,7 @@ class Factor:
         return closest_matches
 
     def adjust_weight(self, word, value, was_correct):
+        # TODO: This should likely be using a derivative instead of a fixed value.
         matches = self.closest_matches(value)
         if word in matches:
             self._weight += 0.0001
