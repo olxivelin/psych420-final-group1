@@ -1,20 +1,28 @@
 from random import random, randint
 
+# TODO: find a value that makes sense for this, what does the research say?
+STRENGTH_THRESHOLD = 5  # how strong the memory in stm has to be before it is moved to LTM
+STRENGTH_BOOST = 2  # how much to boost the strength if this is an item already in LTM
+STRENGTH_INCREMENT = 1  # how much to increase strength each time an item already in STM is added again
+
+
 class MemoryRegister:
 
-    def __init__(self, value, age):
+    def __init__(self, value, age, strength):
         self.original_value = value
         self.value = value
         self.age = age
+        self.strength = strength
 
     def __str__(self):
-        return f"Age: {self.age} Value: {self.value} Original: {self.original_value}"
+        return f"Age: {self.age} Strength: {self.strength} Value: {self.value} Original: {self.original_value}"
 
 
 class ShortTermMemory:
 
-    def __init__(self):
+    def __init__(self, hippocampus):
         self.registers = []
+        self.hippocampus = hippocampus
 
     def __str__(self):
         return f"Registers: \n {[str(r) for r in self.registers]} \n"
@@ -34,11 +42,19 @@ class ShortTermMemory:
     def time_tick(self, with_trace):
         """ Remove the memories that have been in stm too long"""
         forget = []
+        store = []
         for memory in self.registers:
             memory.age += 1
             memory.value = self.fuzz(memory)
             if memory.age >= self.current_max_duration():
                 forget.append(memory)
+            if memory.strength >= STRENGTH_THRESHOLD:
+                store.append(memory)
+
+        for memory in store:
+            if with_trace:
+                print(f"Item going to long term memory: {memory}")
+            self.hippocampus.send_to_long_term_storage(memory)
 
         for memory in forget:
             if with_trace:
@@ -58,19 +74,35 @@ class ShortTermMemory:
         # if it is already in sort term memory reset the age.
         exists = False
         for memory in self.registers:
-            if memory.value == value:
+            # TODO: since we're storing the fuzzed value in memory.value I had to change
+            # this to compare with original_value, which isn't what we want to do,
+            # this likely needs to do a fuzzy match similar to the LTM look up rather than
+            # an exact match like this, and then we can compare to memory.value.
+            if memory.original_value == value:
                 exists = True
                 memory.age = 0
+                memory.strength += STRENGTH_INCREMENT  # The more you see something the stronger the memory
 
         if not exists:
-            self.registers.append(MemoryRegister(value, 0))
+            # see if memory is already in long term memory and boost strength
+            # to mimic the idea of it being easier to remember things you know -
+            # TODO: find data to back this up. Right now Caroline *thinks* she read this,
+            # but isn't 100% sure.
+            strength = 0
+            existing_memory = self.hippocampus.retrieve_from_long_term_storage(*value)
+            if existing_memory:
+                strength = STRENGTH_BOOST
+                if with_trace:
+                    print("Item recognized, boosting strength")
+
+            self.registers.append(MemoryRegister(value, 0, strength))
 
         # if we have too many items then remove the oldest item.
         self.potentially_forget_oldest(with_trace)
 
     def retrieve(self, with_original):
         if with_original:
-            return [memory.value for memory in self.registers], [memory.original_value for memory in self.registers]
+            return [memory.value for memory in self.registers], [memory.original_value for memory in self.registers], [memory.strength for memory in self.registers]
         return [memory.value for memory in self.registers]
 
     def fuzz(self, memory):
