@@ -25,3 +25,16 @@ class SensoryMemory:
         print(f"Adding {word} to stm.")
         data = self.encode_input(word)
         self.short_term_memory.add(data)
+
+    def learn(self, word):
+        encoded = self.encode_input(word)
+        self.short_term_memory.add(encoded)
+        retrieved = self.short_term_memory.retrieve_from_long_term(*encoded)
+        if word not in retrieved:
+            retrieved = self.short_term_memory.learn(word, encoded)
+        correct = word in retrieved
+        self.feedback(word, correct)
+
+    def feedback(self, word, was_correct):
+        encoded = self.encode_input(word)
+        self.short_term_memory.feedback(word, encoded, was_correct)

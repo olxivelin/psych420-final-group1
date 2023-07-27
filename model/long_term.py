@@ -2,7 +2,7 @@ from .data_structures import BinarySearchTree
 
 # TODO: not sure about this, it is being used to allow multiple value lists to be returned if
 # they are all within the threshold amount.
-ERROR_THRESHOLD = 0.1
+ERROR_THRESHOLD = 0.08
 
 
 class Factor:
@@ -20,6 +20,7 @@ class Factor:
         self._tree.add(value, data)
 
     def print(self):
+        print(self._weight)
         self._tree.print()
 
     def closest_matches(self, value):
@@ -28,10 +29,20 @@ class Factor:
 
         closest_matches = []
         for item in values:
-            if self.get_error(item, value) <= ERROR_THRESHOLD:
-                closest_matches += item[0]
+            if item:
+                if self.get_error(item, value) <= ERROR_THRESHOLD:
+                    closest_matches += item[0]
         # print(f"Closest Matches: {closest_matches}")
         return closest_matches
+
+    def adjust_weight(self, word, value, was_correct):
+        # TODO: This should likely be using a derivative instead of a fixed value.
+        matches = self.closest_matches(value)
+        if word in matches:
+            self._weight += 0.0001
+        else:
+            if not was_correct:
+                self._weight -= 0.0001
 
 
 class LongTermMemory:
@@ -41,8 +52,8 @@ class LongTermMemory:
         self._dominance_factor = Factor()
         self._arousal_factor = Factor()
 
-    def prime(self, data, valance, dominance, arousal):
-        self._valence_factor.add_item(valance, data)
+    def prime(self, data, valence, arousal, dominance):
+        self._valence_factor.add_item(valence, data)
         self._dominance_factor.add_item(dominance, data)
         self._arousal_factor.add_item(arousal, data)
 
@@ -67,3 +78,13 @@ class LongTermMemory:
         # print("Intersection of valence and arousal and dominance")
         # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
+
+    def learn(self, word, valence, arousal, dominance):
+        self.prime(word, valence, arousal, dominance)
+        return self.lookup(valence, arousal, dominance)
+
+    def feedback(self, word, valence, arousal, dominance, was_correct):
+        self._valence_factor.adjust_weight(word, valence, was_correct)
+        self._arousal_factor.adjust_weight(word, arousal, was_correct)
+        self._dominance_factor.adjust_weight(word, dominance, was_correct)
+        # print(f"Word: {word} Encoding: {encoded_word} Was Correct: {was_correct}")

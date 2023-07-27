@@ -1,5 +1,5 @@
 # Used to look for data that are near the value we have.
-FUZZ_THRESHOLD = 0.1
+FUZZ_THRESHOLD = 0.05
 
 
 class Node:
@@ -14,11 +14,13 @@ class Node:
     def insert(self, value, data):
         if not self.value:
             self.value = value
-            self.data.append(data)
+            if data not in self.data:
+                self.data.append(data)
             return
 
         if self.value == value:
-            self.data.append(data)
+            if data not in self.data:
+                self.data.append(data)
             return
 
         if value < self.value:
@@ -69,6 +71,8 @@ class Node:
         return self.right.find(value)
 
     def find_in_range(self, min_value, max_value):
+        if self.value is None:
+            return
         if min_value <= self.value <= max_value:
             left_values = []
             right_values = []
@@ -90,7 +94,7 @@ class Node:
         if self.left is not None:
             self.left.inorder(values)
         if self.value is not None:
-            values.append(self.data)
+            values.append([self.value, self.data])
         if self.right is not None:
             self.right.inorder(values)
         return values
