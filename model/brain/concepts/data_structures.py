@@ -1,5 +1,5 @@
 # Used to look for data that are near the value we have.
-FUZZ_THRESHOLD = 0.05
+FUZZ_THRESHOLD = 0.03
 
 
 class Node:
@@ -104,6 +104,9 @@ class BinarySearchTree:
 
     def __init__(self):
         self.root = Node()
+
+    def __str__(self):
+        return f"{self.root.inorder([])}"
 
     def add(self, value, data):
         self.root.insert(value, data)
