@@ -10,6 +10,9 @@ class Factor:
         self._tree = BinarySearchTree()
         self._weight = 1
 
+    def __str__(self):
+        return f"Weight: {self._weight} \n Tree: {self._tree}"
+
     def get_error(self, item, value):
         #TODO: pretty sure I'm not using weight the way we want to here.
         error = abs((item[1] - value) * self._weight)
@@ -19,24 +22,18 @@ class Factor:
     def add_item(self, value, data):
         self._tree.add(value, data)
 
-    def print(self):
-        print(self._weight)
-        self._tree.print()
-
     def closest_matches(self, value):
         values = self._tree.fuzzy_find(value) or [[], 0]
-        # values.sort(key=lambda x: self.get_error(x, value))
 
         closest_matches = []
         for item in values:
             if item:
                 if self.get_error(item, value) <= ERROR_THRESHOLD:
                     closest_matches += item[0]
-        # print(f"Closest Matches: {closest_matches}")
         return closest_matches
 
     def adjust_weight(self, word, value, was_correct):
-        # TODO: This should likely be using a derivative instead of a fixed value.
+        # TODO: This should likely be using something other than a fixed value.
         matches = self.closest_matches(value)
         if word in matches:
             self._weight += 0.0001
@@ -52,31 +49,21 @@ class LongTermMemory:
         self._dominance_factor = Factor()
         self._arousal_factor = Factor()
 
+    def __str__(self):
+        return f"Valence: \n {self._valence_factor} \n Arousal: \n {self._arousal_factor} \n Dominance: \n {self._dominance_factor}"
+
+    def time_tick(self, with_trace):
+        pass
+
     def prime(self, data, valence, arousal, dominance):
         self._valence_factor.add_item(valence, data)
         self._dominance_factor.add_item(dominance, data)
         self._arousal_factor.add_item(arousal, data)
 
-    def print(self):
-        self._valence_factor.print()
-        self._dominance_factor.print()
-        self._arousal_factor.print()
-
     def lookup(self, valence, arousal, dominance):
         valence_values = self._valence_factor.closest_matches(valence)
-        # print(f"Valence: {valence_values}")
         arousal_values = self._arousal_factor.closest_matches(arousal)
-        # print(f"Arousal: {arousal_values}")
         dominance_values = self._dominance_factor.closest_matches(dominance)
-        # print(f"Dominance: {dominance_values}")
-        # print("Intersection of valence and arousal")
-        # print(set(valence_values).intersection(set(arousal_values)))
-        # print("Intersection of dominance and arousal")
-        # print(set(arousal_values).intersection(set(dominance_values)))
-        # print("Intersection of valence and dominance")
-        # print(set(valence_values).intersection(set(dominance_values)))
-        # print("Intersection of valence and arousal and dominance")
-        # print(set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values)))
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
 
     def learn(self, word, valence, arousal, dominance):
@@ -87,4 +74,3 @@ class LongTermMemory:
         self._valence_factor.adjust_weight(word, valence, was_correct)
         self._arousal_factor.adjust_weight(word, arousal, was_correct)
         self._dominance_factor.adjust_weight(word, dominance, was_correct)
-        # print(f"Word: {word} Encoding: {encoded_word} Was Correct: {was_correct}")
