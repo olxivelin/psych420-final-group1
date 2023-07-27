@@ -23,6 +23,10 @@ class Brain:
     def preload(self, word, valence, arousal, dominance):
         self.cortex.preload(word, valence, arousal, dominance)
 
+    def rehearse(self, word, with_trace):
+        sensory_input = self.cortex.sensory_memory.encode_input(word)
+        self.hippocampus.short_term_memory.add(sensory_input, with_trace)
+
     def remember(self, with_original):
         words = []
         short_term_memory_contents, original_values = self.hippocampus.short_term_memory.retrieve(with_original)
@@ -30,6 +34,6 @@ class Brain:
             orig_valence, orig_arousal, orig_dominance = original_values[i]
             original_word = self.cortex.sensory_memory.decode(orig_valence, orig_arousal, orig_dominance)
             valence, arousal, dominance = short_term_memory_contents[i]
-            remembered_word = self.cortex.long_term_memory.lookup(valence, arousal, dominance) or ""
+            remembered_word = self.cortex.long_term_memory.lookup(valence, arousal, dominance) or "?"
             words.append([original_word, remembered_word])
         return words
