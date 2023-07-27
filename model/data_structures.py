@@ -1,5 +1,5 @@
 # Used to look for data that are near the value we have.
-FUZZ_THRESHOLD = 0.1
+FUZZ_THRESHOLD = 0.05
 
 
 class Node:

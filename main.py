@@ -9,6 +9,7 @@ if __name__ == '__main__':
     stm = ShortTermMemory(ltm)
     # sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)
     sensory = SensoryMemory("./data/test.csv", stm)
+
     for i in range(100):
         for word in sensory.word_mapping.keys():
             sensory.learn(word)
@@ -16,12 +17,15 @@ if __name__ == '__main__':
     # train("./data/BRM-emot-submit.csv", ltm)
     ltm.print()
 
+
     # data = sensory.encode_input("cat")
     # print(data)
     # print(ltm.lookup(*data))
 
     for i in range(7):
         sensory.sense()
+
+    # stm.print()
 
     for item in stm.registers:
         recovered_memory = stm.retrieve_from_long_term(*item)

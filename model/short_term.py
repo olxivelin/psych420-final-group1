@@ -20,7 +20,7 @@ class ShortTermMemory:
     def fuzz(self, valence, arousal, dominance):
         index = self.registers.index((valence, arousal, dominance))
         # TODO: I just picked a random equation here, is there something better to do here?
-        fuzz_factor = (len(self.registers) - index) / (len(self.registers) * len(self.registers))
+        fuzz_factor = (len(self.registers) - index - 1) / len(self.registers) ** 2.5
         return valence + fuzz_factor, arousal + fuzz_factor, dominance + fuzz_factor
 
     def retrieve_from_long_term(self, valence, arousal, dominance):

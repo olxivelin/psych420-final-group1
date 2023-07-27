@@ -32,7 +32,7 @@ class Factor:
             if item:
                 if self.get_error(item, value) <= ERROR_THRESHOLD:
                     closest_matches += item[0]
-        print(f"Closest Matches: {closest_matches}")
+        # print(f"Closest Matches: {closest_matches}")
         return closest_matches
 
     def adjust_weight(self, word, value, was_correct):
@@ -44,6 +44,7 @@ class Factor:
             if not was_correct:
                 self._weight -= 0.0001
 
+
 class LongTermMemory:
 
     def __init__(self):
@@ -51,8 +52,8 @@ class LongTermMemory:
         self._dominance_factor = Factor()
         self._arousal_factor = Factor()
 
-    def prime(self, data, valance, dominance, arousal):
-        self._valence_factor.add_item(valance, data)
+    def prime(self, data, valence, arousal, dominance):
+        self._valence_factor.add_item(valence, data)
         self._dominance_factor.add_item(dominance, data)
         self._arousal_factor.add_item(arousal, data)
 
