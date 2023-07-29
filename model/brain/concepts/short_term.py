@@ -5,7 +5,9 @@ STRENGTH_THRESHOLD = 5  # how strong the memory in stm has to be before it is mo
 STRENGTH_BOOST = 2  # how much to boost the strength if this is an item already in LTM
 STRENGTH_INCREMENT = 1  # how much to increase strength each time an item already in STM is added again
 
-
+# TODO: Rate of decay -> should be rapid for first 18 seconds - Peterson and Peterson (1959)
+#  https://psycnet-apa-org.proxy.lib.uwaterloo.ca/fulltext/1960-05499-001.pdf
+#  exponential decay perhaps?
 class MemoryRegister:
 
     def __init__(self, value, age, strength):
@@ -75,9 +77,9 @@ class ShortTermMemory:
         exists = False
         for memory in self.registers:
             # TODO: since we're storing the fuzzed value in memory.value I had to change
-            # this to compare with original_value, which isn't what we want to do,
-            # this likely needs to do a fuzzy match similar to the LTM look up rather than
-            # an exact match like this, and then we can compare to memory.value.
+            #  this to compare with original_value, which isn't what we want to do,
+            #  this likely needs to do a fuzzy match similar to the LTM look up rather than
+            #  an exact match like this, and then we can compare to memory.value.
             if memory.original_value == value:
                 exists = True
                 memory.age = 0
@@ -87,7 +89,7 @@ class ShortTermMemory:
             # see if memory is already in long term memory and boost strength
             # to mimic the idea of it being easier to remember things you know -
             # TODO: find data to back this up. Right now Caroline *thinks* she read this,
-            # but isn't 100% sure.
+            #  but isn't 100% sure.
             strength = 0
             existing_memory = self.hippocampus.retrieve_from_long_term_storage(*value)
             if existing_memory:
