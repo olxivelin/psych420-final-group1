@@ -9,13 +9,6 @@ import csv
 #  compared with interference levels and time passed
 #  maybe rehearsal frequency?
 
-class MonitorableMixin:
-    def __init__(self):
-        self.data_monitor = None
-
-    def set_trace_monitor(self, data_monitor):
-        self.data_monitor = data_monitor
-
 
 class DataMonitor:
     @unique
