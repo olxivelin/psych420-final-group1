@@ -3,13 +3,14 @@ import random
 
 class SensoryMemory:
 
-    def __init__(self):
+    def __init__(self, data_monitor):
         self.word_mapping = {}
+        self.data_monitor = data_monitor
 
     def __str__(self):
         return f"Encoding Map: \n {self.word_mapping}"
 
-    def time_tick(self, with_trace):
+    def time_tick(self):
         pass
 
     def prime(self, word, valence, arousal, dominance):

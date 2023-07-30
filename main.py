@@ -7,6 +7,7 @@ if __name__ == '__main__':
     simulation.preload("./data/BRM-emot-submit.csv")
     simulation.run_1()
 
+    print(simulation.data_monitor.data_for_decay_factors())
     # ltm = LongTermMemory()
     # stm = ShortTermMemory(ltm)
     # # sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)
