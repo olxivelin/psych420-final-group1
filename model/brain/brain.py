@@ -3,25 +3,25 @@ from .hippocampus import Hippocampus
 from random import random
 
 
-# TODO: Caroline picked a random number here, is there data we should be using?
-PROBABILITY_OF_ATTENDING = 0.2
-
-
 class Brain:
 
-    def __init__(self):
+    def __init__(self, distraction_level=0.2):
         self.cortex = Cortex()
         self.hippocampus = Hippocampus(self.cortex)
+        self.distraction_level = distraction_level
 
     def __str__(self):
         return f"Cortex: \n {self.cortex} \n Hippocampus: \n {self.hippocampus} \n"
+
+    def set_distraction_level(self, distraction_level):
+        self.distraction_level = distraction_level
 
     def time_tick(self, with_trace):
 
         self.hippocampus.time_tick(with_trace)
         self.cortex.time_tick(with_trace)
 
-        if random() < PROBABILITY_OF_ATTENDING:
+        if random() < self.distraction_level:
             self.hippocampus.process_sensory_input(self.cortex.sense(), with_trace)
 
     def preload(self, word, valence, arousal, dominance):

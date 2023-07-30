@@ -5,7 +5,7 @@ if __name__ == '__main__':
     simulation = Simulation()
     # simulation.preload("./data/test.csv")
     simulation.preload("./data/BRM-emot-submit.csv")
-    simulation.run()
+    simulation.run_1()
 
     # ltm = LongTermMemory()
     # stm = ShortTermMemory(ltm)

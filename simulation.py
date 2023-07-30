@@ -21,9 +21,9 @@ class Simulation:
         self.brain = Brain()
         self.clock = Clock()
 
-    def run(self):
-
+    def run_1(self, distraction_level=0.2):
         with_trace = True
+        self.brain.set_distraction_level(distraction_level)
 
         rehearsal_rate = 10
 
@@ -37,10 +37,11 @@ class Simulation:
                 self.brain.rehearse(rehearsal_list[rehearsal_index], with_trace)
 
         print(self.brain)
-        for word_pairs in self.brain.remember(with_original=True):
-            print("Recalled based on Short Term Memory")
-            print(f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} \n")
+        # for word_pairs in self.brain.remember(with_original=True):
+        #     print("Recalled based on Short Term Memory")
+        #     print(f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} \n")
 
+        return self.brain.remember(with_original=True)
         # for i in range(1000):
         #     self.clock.tick()
         #     self.brain.time_tick(with_trace)
