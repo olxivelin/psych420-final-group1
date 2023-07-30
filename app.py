@@ -59,6 +59,8 @@ app_ui = ui.page_fluid(
             ui.output_plot("simulation_1_fuzz_factors"),
             ui.h5("STM Memory Age over Time"),
             ui.output_plot("simulation_1_rehearsals"),
+            ui.h5("Max Ages"),
+            ui.output_plot("simulation_1_max_ages"),
             ui.h5("Output Trace"),
             ui.output_ui("simulation_1_trace"),
             #
@@ -72,8 +74,12 @@ app_ui = ui.page_fluid(
             ui.h4("Simulation 2 Results"),
             ui.h5("Words To Remember"),
             ui.output_text_verbatim("simulation_2_rehearsal_words"),
+            ui.h5("Recalled from Short Term Memory"),
+            ui.output_ui("simulation_2_recall"),
             ui.h5("STM Memory Age Fuzzing Factor over Time"),
             ui.output_plot("simulation_2_fuzz_factors"),
+            ui.h5("Max Ages"),
+            ui.output_plot("simulation_2_max_ages"),
             ui.h5("Output Trace"),
             ui.output_ui("simulation_2_trace"),
 
@@ -116,7 +122,6 @@ def server(input: Inputs, output: Outputs, session: Session):
     @output
     @render.text
     def simulation_1_trace():
-        run_simulation_1()
         log = ""
         for line in s.get().data_monitor.trace_log_lines:
             log += f"{line} <br>"
@@ -138,7 +143,6 @@ def server(input: Inputs, output: Outputs, session: Session):
         img = ui.img(src="Information_Processing_Model_-_Atkinson_&_Shiffrin.jpg", style="width: 400px;")
         return img
 
-    @reactive.Calc
     @output
     @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
     def simulation_1_fuzz_factors():
@@ -157,7 +161,6 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         return fig
 
-    @reactive.Calc
     @output
     @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
     def simulation_1_rehearsals():
@@ -180,6 +183,17 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         ax.legend(loc="upper right")
 
+        return fig
+
+    @output
+    @render.plot(alt="Max Ages for Words in STM")
+    def simulation_1_max_ages():
+        plt.style.use('_mpl-gallery')
+
+        x = s.get().data_monitor.max_ages
+
+        fig, ax = plt.subplots()
+        ax.hist(x)
         return fig
     #
     @reactive.Calc
@@ -208,8 +222,12 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     @output
     @render.text
+    def simulation_2_recall():
+        return run_simulation_2()
+
+    @output
+    @render.text
     def simulation_2_trace():
-        run_simulation_2()
         log = ""
         for line in s2.get().data_monitor.trace_log_lines:
             log += f"{line} <br>"
@@ -220,7 +238,6 @@ def server(input: Inputs, output: Outputs, session: Session):
     def simulation_2_rehearsal_words():
         return s2.get().rehearsal_list
 
-    @reactive.Calc
     @output
     @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
     def simulation_2_fuzz_factors():
@@ -230,8 +247,6 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         series = s2.get().data_monitor.data_for_decay_factors()
 
-        print(series)
-
         for item, item_series in series.items():
             word = s2.get().lookup_word_from_encoding(item)
             if word in s2.get().rehearsal_list:
@@ -240,6 +255,18 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax.legend(loc="upper right")
 
         return fig
+
+    @output
+    @render.plot(alt="Max ages for words in STM")
+    def simulation_2_max_ages():
+        plt.style.use('_mpl-gallery')
+
+        x = s2.get().data_monitor.max_ages
+
+        fig, ax = plt.subplots()
+        ax.hist(x)
+        return fig
+
 
 static_dir = Path(__file__).parent / "report/images"
 app = App(app_ui, server, static_assets=static_dir)

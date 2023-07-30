@@ -26,6 +26,7 @@ class DataMonitor:
         self.elapsed_time = 0
         self.trace_log_lines = []
         self.data_points = defaultdict(lambda: defaultdict(list))
+        self.max_ages = []
 
     def tick(self):
         self.elapsed_time += 1
@@ -87,13 +88,16 @@ class DataMonitor:
 
 class Simulation:
 
-    def __init__(self, word_list=["person", "man", "woman", "camera", "tv", ]):
+    def __init__(self, word_list=None):
+        if word_list is None:
+            word_list = ["person", "man", "woman", "camera", "tv", ]
         self.data_monitor = DataMonitor()
         self.brain = Brain(self.data_monitor)
         self._rehearsal_list = word_list
 
-    def run_1(self, distraction_level=0.2, total_time=100, rehearsal_interval=10):
+    def run_1(self, distraction_level=0.2, total_time=100, rehearsal_interval=10, fuzzy_threshold=0.03):
         self.brain.set_distraction_level(distraction_level)
+        self.brain.set_fuzzy_threshold(fuzzy_threshold)
 
         for i in range(total_time):
             self.data_monitor.tick()
@@ -109,9 +113,10 @@ class Simulation:
         #     print("Recalled based on Short Term Memory")
         #     print(f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} \n")
 
+        self.brain.end_simulation()
         self.data_monitor.print_log()
 
-        return self.brain.remember(with_original=True)
+        return self.brain.remember_from_ltm(with_original=True)
         # for i in range(1000):
         #     self.clock.tick()
         #     self.brain.time_tick(with_trace)
@@ -119,8 +124,9 @@ class Simulation:
         # # print(self.brain)
         # print(self.brain.remember(with_original=True))
 
-    def run_2(self, distraction_level=0.2, total_time=100):
+    def run_2(self, distraction_level=0, total_time=30, fuzzy_threshold=0.03):
         self.brain.set_distraction_level(distraction_level)
+        self.brain.set_fuzzy_threshold(fuzzy_threshold)
 
         # Load all the words for the trial
         for word in self.rehearsal_list:
@@ -131,9 +137,10 @@ class Simulation:
             self.data_monitor.tick()
             self.brain.time_tick()
 
+        self.brain.end_simulation()
         self.data_monitor.print_log()
 
-        return self.brain.remember(with_original=True)
+        return self.brain.recall(with_original=True)
 
     def preload(self, data_file):
         with open(data_file, newline='') as csvfile:

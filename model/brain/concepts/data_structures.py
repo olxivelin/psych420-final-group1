@@ -1,5 +1,8 @@
-# Used to look for data that are near the value we have.
-FUZZ_THRESHOLD = 0.03
+
+
+# TODO: not sure about this, it is being used to allow multiple value lists to be returned if
+# they are all within the threshold amount.
+ERROR_THRESHOLD = 0.08
 
 
 class Node:
@@ -103,11 +106,15 @@ class Node:
 
 class BinarySearchTree:
 
-    def __init__(self, data_monitor):
+    def __init__(self, data_monitor, fuzzy_threshold=0.03):
         self.root = Node(data_monitor, None, None)
+        self.fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"{self.root.inorder([])}"
+
+    def set_fuzzy_threshold(self,  fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
 
     def add(self, value, data):
         self.root.insert(value, data)
@@ -119,4 +126,46 @@ class BinarySearchTree:
         return self.root.find(value)
 
     def fuzzy_find(self, value):
-        return self.root.find_in_range(value - FUZZ_THRESHOLD, value + FUZZ_THRESHOLD)
+        return self.root.find_in_range(value - self.fuzzy_threshold, value + self.fuzzy_threshold)
+
+
+class Factor:
+    def __init__(self, data_monitor, fuzzy_threshold=0.03):
+        self._tree = BinarySearchTree(data_monitor)
+        self._weight = 1
+        self.data_monitor = data_monitor
+        self.fuzzy_threshold = fuzzy_threshold
+
+    def __str__(self):
+        return f"Weight: {self._weight} \n Tree: {self._tree}"
+
+    def set_fuzzy_threshold(self, fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
+
+    def get_error(self, item, value):
+        # TODO: pretty sure I'm not using weight the way we want to here.
+        error = abs((item[1] - value) * self._weight)
+        return error
+
+    def add_item(self, value, data):
+        self._tree.add(value, data)
+
+    def closest_matches(self, value):
+        values = self._tree.fuzzy_find(value) or [[], 0]
+
+        closest_matches = []
+        for item in values:
+            if item:
+                if self.get_error(item, value) <= ERROR_THRESHOLD:
+                    closest_matches += item[0]
+        return closest_matches
+
+
+    def adjust_weight(self, word, value, was_correct):
+        # TODO: This should likely be using something other than a fixed value.
+        matches = self.closest_matches(value)
+        if word in matches:
+            self._weight += 0.0001
+        else:
+            if not was_correct:
+                self._weight -= 0.0001

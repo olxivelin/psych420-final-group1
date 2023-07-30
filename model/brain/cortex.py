@@ -4,13 +4,19 @@ from .concepts.sensory import SensoryMemory
 
 class Cortex:
 
-    def __init__(self, data_monitor):
+    def __init__(self, data_monitor, fuzzy_threshold=0.03):
         self.sensory_memory = SensoryMemory(data_monitor)
         self.long_term_memory = LongTermMemory(data_monitor)
         self.data_monitor = data_monitor
+        self.fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Sensory Memory: \n {self.sensory_memory} \n Long Term Memory: \n {self.long_term_memory} \n"
+
+    def set_fuzzy_threshold(self,  fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
+        self.long_term_memory.set_fuzzy_threshold(fuzzy_threshold)
+        self.sensory_memory.set_fuzzy_threshold(fuzzy_threshold)
 
     def preload(self, word, valence, arousal, dominance):
         self.sensory_memory.prime(word, valence, arousal, dominance)
@@ -19,6 +25,10 @@ class Cortex:
     def time_tick(self):
         self.sensory_memory.time_tick()
         self.long_term_memory.time_tick()
+
+    def end_simulation(self):
+        self.sensory_memory.end_simulation()
+        self.long_term_memory.end_simulation()
 
     def sense(self):
         return self.sensory_memory.sense()
@@ -32,3 +42,6 @@ class Cortex:
 
     def retrieve_memory(self, valence, arousal, dominance):
         return self.long_term_memory.lookup(valence, arousal, dominance)
+
+    def fuzzy_lookup(self, valence, arousal, dominance):
+        return self.sensory_memory.fuzzy_lookup(valence, arousal, dominance)

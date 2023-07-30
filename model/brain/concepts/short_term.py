@@ -74,7 +74,12 @@ class ShortTermMemory:
                                              action=self.data_monitor.Action.FORGET,
                                              value=[memory.original_value, memory.value, memory.age, memory.total_age])
             self.data_monitor.log(f"Item too old forgetting {memory}\n")
+            self.data_monitor.max_ages.append(memory.total_age)
             self.registers.remove(memory)
+
+    def end_simulation(self):
+        for r in self.registers:
+            self.data_monitor.max_ages.append(r.total_age)
 
     def potentially_forget_oldest(self):
         max_quantity = self.current_max_capacity()
@@ -84,6 +89,7 @@ class ShortTermMemory:
                 self.data_monitor.add_data_point(category=self.data_monitor.Category.STM,
                                                  action=self.data_monitor.Action.FORGET,
                                                  value=[r.original_value, r.value, r.age, r.total_age])
+                self.data_monitor.max_ages.append(r.total_age)
                 self.data_monitor.log(f"Too many items forgetting {str(r)}")
             self.registers = self.registers[0:max_quantity]
 
