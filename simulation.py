@@ -21,9 +21,9 @@ class Simulation:
         self.brain = Brain()
         self.clock = Clock()
 
-    def run(self):
-
+    def run_1(self, distraction_level=0.2):
         with_trace = True
+        self.brain.set_distraction_level(distraction_level)
 
         rehearsal_rate = 10
 
