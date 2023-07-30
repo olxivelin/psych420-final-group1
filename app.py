@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from shiny import Inputs, Outputs, Session, App, reactive, render, req, ui
 
 from simulation import Simulation
@@ -19,7 +21,8 @@ def server(input: Inputs, output: Outputs, session: Session):
     @render.text
     def results():
         s = Simulation()
-        s.preload("./data/BRM-emot-submit.csv")
+        infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
+        s.preload(infile)
         g = ""
         for word_pairs in s.run():
             g += f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} \n"
