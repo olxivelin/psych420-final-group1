@@ -3,13 +3,14 @@ FUZZ_THRESHOLD = 0.03
 
 
 class Node:
-    def __init__(self, value=None, data=None):
+    def __init__(self, data_monitor, value, data):
         self.left = None
         self.right = None
         self.value = value
         self.data = []
         if data:
             self.data.append(data)
+        self.data_monitor = data_monitor
 
     def insert(self, value, data):
         if not self.value:
@@ -27,13 +28,13 @@ class Node:
             if self.left:
                 self.left.insert(value, data)
                 return
-            self.left = Node(value, data)
+            self.left = Node(self.data_monitor, value, data)
             return
 
         if self.right:
             self.right.insert(value, data)
             return
-        self.right = Node(value, data)
+        self.right = Node(self.data_monitor, value, data)
 
     def delete(self, value):
         if self is None:
@@ -102,8 +103,8 @@ class Node:
 
 class BinarySearchTree:
 
-    def __init__(self):
-        self.root = Node()
+    def __init__(self, data_monitor):
+        self.root = Node(data_monitor, None, None)
 
     def __str__(self):
         return f"{self.root.inorder([])}"
@@ -119,6 +120,3 @@ class BinarySearchTree:
 
     def fuzzy_find(self, value):
         return self.root.find_in_range(value - FUZZ_THRESHOLD, value + FUZZ_THRESHOLD)
-
-    def print(self):
-        print(self.root.inorder([]))

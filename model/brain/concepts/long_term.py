@@ -6,9 +6,10 @@ ERROR_THRESHOLD = 0.08
 
 
 class Factor:
-    def __init__(self):
-        self._tree = BinarySearchTree()
+    def __init__(self, data_monitor):
+        self._tree = BinarySearchTree(data_monitor)
         self._weight = 1
+        self.data_monitor = data_monitor
 
     def __str__(self):
         return f"Weight: {self._weight} \n Tree: {self._tree}"
@@ -16,7 +17,6 @@ class Factor:
     def get_error(self, item, value):
         #TODO: pretty sure I'm not using weight the way we want to here.
         error = abs((item[1] - value) * self._weight)
-        # print(error)
         return error
 
     def add_item(self, value, data):
@@ -44,15 +44,16 @@ class Factor:
 
 class LongTermMemory:
 
-    def __init__(self):
-        self._valence_factor = Factor()
-        self._dominance_factor = Factor()
-        self._arousal_factor = Factor()
+    def __init__(self, data_monitor):
+        self._valence_factor = Factor(data_monitor)
+        self._dominance_factor = Factor(data_monitor)
+        self._arousal_factor = Factor(data_monitor)
+        self.data_monitor = data_monitor
 
     def __str__(self):
         return f"Valence: \n {self._valence_factor} \n Arousal: \n {self._arousal_factor} \n Dominance: \n {self._dominance_factor}"
 
-    def time_tick(self, with_trace):
+    def time_tick(self):
         pass
 
     def prime(self, data, valence, arousal, dominance):

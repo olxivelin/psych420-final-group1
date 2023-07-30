@@ -6,11 +6,11 @@ There is a hosted version of the final report: https://cpsimpson.github.io/psych
 
 1. Install required python packages
     `pip install -r references.txt`
-1. Generate shinylive website output
+2. Generate shinylive website output
     `shinylive export . docs`
-1. Run local python static website
+3. Run local python static website
     `python3 -m http.server --directory docs --bind localhost 8008`
-1. Open in browser
+4. Open in browser
     `http://127.0.0.1:8008`
 
 
