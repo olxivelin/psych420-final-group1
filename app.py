@@ -30,7 +30,6 @@ app_ui = ui.page_fluid(
     ui.panel_title('Memory Simulation'),  # 1
     ui.layout_sidebar(
         ui.panel_sidebar(
-
         ),
         ui.panel_main(
             get_markdown("background"),
@@ -43,16 +42,13 @@ app_ui = ui.page_fluid(
             get_markdown("learning"),
             get_markdown("our_model"),
             get_markdown("simulation_1"),
-
+            ui.br(),
             ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
+            ui.input_slider(id="rehearsal_interval", label="Rehearsal Interval (s)", value=10, min=0, max=100),
             ui.input_numeric(id="total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
             ui.input_text(id="word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
-
-
-            ui.br(),
             ui.input_action_button("run_simulation_1", "Re-Run Simulation"),
             ui.br(),
-
             ui.hr(),
             ui.h4("Simulation Results"),
             ui.h5("Words Rehearsed"),
@@ -60,15 +56,29 @@ app_ui = ui.page_fluid(
             ui.h5("Words Remembered"),
             ui.output_ui("simulation_1_memory"),
             ui.h5("STM Memory Age Fuzzing Factor over Time"),
-            ui.output_plot("fuzz_factors"),
+            ui.output_plot("simulation_1_fuzz_factors"),
             ui.h5("STM Memory Age over Time"),
-            ui.output_plot("rehearsals"),
-
+            ui.output_plot("simulation_1_rehearsals"),
             ui.h5("Output Trace"),
             ui.output_ui("simulation_1_trace"),
+            #
+            get_markdown("simulation_2"),
+            ui.br(),
+            ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
+            ui.input_text(id="s2_word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
+            ui.input_action_button("run_simulation_2", "Re-Run Simulation"),
+            ui.br(),
+            ui.hr(),
+            ui.h4("Simulation 2 Results"),
+            ui.h5("Words To Remember"),
+            ui.output_text_verbatim("simulation_2_rehearsal_words"),
+            ui.h5("STM Memory Age Fuzzing Factor over Time"),
+            ui.output_plot("simulation_2_fuzz_factors"),
+            ui.h5("Output Trace"),
+            ui.output_ui("simulation_2_trace"),
 
+            ui.hr(),
             get_markdown("references"),
-
 
         )
     ))
@@ -77,6 +87,7 @@ app_ui = ui.page_fluid(
 def server(input: Inputs, output: Outputs, session: Session):
 
     s = reactive.Value(Simulation())
+    s2 = reactive.Value(Simulation())
 
     @reactive.Calc
     def run_simulation_1():
@@ -130,7 +141,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @reactive.Calc
     @output
     @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
-    def fuzz_factors():
+    def simulation_1_fuzz_factors():
         plt.style.use('_mpl-gallery')
 
         fig, ax = plt.subplots()
@@ -149,7 +160,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @reactive.Calc
     @output
     @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
-    def rehearsals():
+    def simulation_1_rehearsals():
         plt.style.use('_mpl-gallery')
 
         fig, ax = plt.subplots()
@@ -170,7 +181,65 @@ def server(input: Inputs, output: Outputs, session: Session):
         ax.legend(loc="upper right")
 
         return fig
+    #
+    @reactive.Calc
+    def run_simulation_2():
+        input.run_simulation_2()
 
+        distraction_level = 0
+        total_time = input.s2_total_time()
+
+        word_list = [x.strip().lower() for x in input.s2_word_list().split(',')]
+
+        p = ui.Progress()
+        p.set(1 / 30, message="Simulating, please wait...")
+        s2.set(Simulation(word_list))
+        infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
+        p.set(5 / 30, message="Loading sensory encodings, please wait...")
+        s2.get().preload(infile)
+        p.set(20 / 30, message="Simulating time passing, please wait...")
+        g = ""
+        for word_pairs in s2.get().run_2(distraction_level, total_time):
+            p.set(30 / 30, message="Recalling from short term memory, please wait...")
+            g += f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} <br>"
+        p.close()
+
+        return g
+
+    @output
+    @render.text
+    def simulation_2_trace():
+        run_simulation_2()
+        log = ""
+        for line in s2.get().data_monitor.trace_log_lines:
+            log += f"{line} <br>"
+        return log
+
+    @output
+    @render.text
+    def simulation_2_rehearsal_words():
+        return s2.get().rehearsal_list
+
+    @reactive.Calc
+    @output
+    @render.plot(alt="Fuzz Factors over Time for Rehearsed Words")
+    def simulation_2_fuzz_factors():
+        plt.style.use('_mpl-gallery')
+
+        fig, ax = plt.subplots()
+
+        series = s2.get().data_monitor.data_for_decay_factors()
+
+        print(series)
+
+        for item, item_series in series.items():
+            word = s2.get().lookup_word_from_encoding(item)
+            if word in s2.get().rehearsal_list:
+                ax.plot(item_series["xs"], item_series["ys"], linewidth=2.0, label=word)
+
+        ax.legend(loc="upper right")
+
+        return fig
 
 static_dir = Path(__file__).parent / "report/images"
 app = App(app_ui, server, static_assets=static_dir)

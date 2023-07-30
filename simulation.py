@@ -48,10 +48,10 @@ class DataMonitor:
             series[values[0]]["xs"].append(time)
             series[values[0]]["ys"].append(values[4])
 
-        for time, values in self.data_points[self.Category.STM][self.Action.FORGET]:
-            # memory.original_value, memory.value, memory.age, memory.total_age
-            series[values[0]]["xs"].append(time)
-            series[values[0]]["ys"].append(0)
+        # for time, values in self.data_points[self.Category.STM][self.Action.FORGET]:
+        #     # memory.original_value, memory.value, memory.age, memory.total_age
+        #     series[values[0]]["xs"].append(time)
+        #     series[values[0]]["ys"].append(0)
         return series
 
     def rehearsal_points(self):
@@ -92,16 +92,14 @@ class Simulation:
         self.brain = Brain(self.data_monitor)
         self._rehearsal_list = word_list
 
-    def run_1(self, distraction_level=0.2, total_time=100):
+    def run_1(self, distraction_level=0.2, total_time=100, rehearsal_interval=10):
         self.brain.set_distraction_level(distraction_level)
-
-        rehearsal_rate = 10
 
         for i in range(total_time):
             self.data_monitor.tick()
             self.brain.time_tick()
 
-            rehearsal_index = i % rehearsal_rate
+            rehearsal_index = i % rehearsal_interval
             if rehearsal_index < len(self.rehearsal_list):
                 self.brain.rehearse(self.rehearsal_list[rehearsal_index])
 
@@ -120,6 +118,22 @@ class Simulation:
         #
         # # print(self.brain)
         # print(self.brain.remember(with_original=True))
+
+    def run_2(self, distraction_level=0.2, total_time=100):
+        self.brain.set_distraction_level(distraction_level)
+
+        # Load all the words for the trial
+        for word in self.rehearsal_list:
+            self.brain.rehearse(word)
+
+        # Let time pass without rehearsing
+        for i in range(total_time):
+            self.data_monitor.tick()
+            self.brain.time_tick()
+
+        self.data_monitor.print_log()
+
+        return self.brain.remember(with_original=True)
 
     def preload(self, data_file):
         with open(data_file, newline='') as csvfile:
