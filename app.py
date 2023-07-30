@@ -206,7 +206,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         input.run_simulation_2()
 
         distraction_level = 0
-        fuzziness_threshold = (input.fuzzy_threshold() / 1000)
+        fuzziness_threshold = (input.s2_fuzzy_threshold() / 1000)
         total_time = input.s2_total_time()
 
         word_list = [x.strip().lower() for x in input.s2_word_list().split(',')]
