@@ -45,6 +45,7 @@ app_ui = ui.page_fluid(
             ui.br(),
             ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
             ui.input_slider(id="rehearsal_interval", label="Rehearsal Interval (s)", value=10, min=0, max=100),
+            ui.input_slider(id="fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
             ui.input_numeric(id="total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
             ui.input_text(id="word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
             ui.input_action_button("run_simulation_1", "Re-Run Simulation"),
@@ -67,6 +68,7 @@ app_ui = ui.page_fluid(
             get_markdown("simulation_2"),
             ui.br(),
             ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
+            ui.input_slider(id="s2_fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
             ui.input_text(id="s2_word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
             ui.input_action_button("run_simulation_2", "Re-Run Simulation"),
             ui.br(),
@@ -100,6 +102,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         input.run_simulation_1()
 
         distraction_level = (input.distraction_level() / 100)
+        fuzziness_threshold = (input.fuzzy_threshold() / 1000)
         total_time = input.total_time()
 
         word_list = [x.strip().lower() for x in input.word_list().split(',')]
@@ -112,7 +115,9 @@ def server(input: Inputs, output: Outputs, session: Session):
         s.get().preload(infile)
         p.set(20 / 30, message="Simulating rehearsal over time, please wait...")
         g = ""
-        for word_pairs in s.get().run_1(distraction_level, total_time):
+        for word_pairs in s.get().run_1(distraction_level=distraction_level,
+                                        total_time=total_time,
+                                        fuzzy_threshold=fuzziness_threshold):
             p.set(30 / 30, message="Recalling from short term memory, please wait...")
             g += f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} <br>"
         p.close()
@@ -201,6 +206,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         input.run_simulation_2()
 
         distraction_level = 0
+        fuzziness_threshold = (input.fuzzy_threshold() / 1000)
         total_time = input.s2_total_time()
 
         word_list = [x.strip().lower() for x in input.s2_word_list().split(',')]
@@ -213,7 +219,9 @@ def server(input: Inputs, output: Outputs, session: Session):
         s2.get().preload(infile)
         p.set(20 / 30, message="Simulating time passing, please wait...")
         g = ""
-        for word_pairs in s2.get().run_2(distraction_level, total_time):
+        for word_pairs in s2.get().run_2(distraction_level=distraction_level,
+                                        total_time=total_time,
+                                        fuzzy_threshold=fuzziness_threshold):
             p.set(30 / 30, message="Recalling from short term memory, please wait...")
             g += f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} <br>"
         p.close()
