@@ -10,6 +10,10 @@ class Clock:
     def tick(self):
         self.elapsed_time += 1
 
+# TODO: add graph outputs for the recall percentages
+#  compared with interference levels and time passed
+#  maybe rehearsal frequency?
+
 
 class Simulation:
 

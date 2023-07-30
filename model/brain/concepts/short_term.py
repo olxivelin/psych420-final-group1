@@ -29,11 +29,15 @@ class ShortTermMemory:
     def __str__(self):
         return f"Registers: \n {[str(r) for r in self.registers]} \n"
 
+    # Based on Miller's Magical Number Seven
+    #  Miller, G. A. (1994). The Magical Number Seven, Plus or Minus Two: Some Limits on Our Capacity for Processing Information. Psychological Review, 101(2), 343–352. https://doi.org/10.1037//0033-295X.101.2.343
+    # https://journals-scholarsportal-info.proxy.lib.uwaterloo.ca/details/0033295x/v101i0002/343_tmnspooocfpi.xml
     @staticmethod
     def current_max_capacity():
         """Return a value between 7 +/- 2"""
         extra = randint(-2, 2)
         return 7 + extra
+
 
     @staticmethod
     def current_max_duration():
