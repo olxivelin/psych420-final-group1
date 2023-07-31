@@ -1,13 +1,17 @@
 
 ### Atkinson-Shiffrin Model
 
-Write some stuff about the model here.... 
+[//]: # (Write some stuff about the model here.... )
 
+[//]: # ()
+[//]: # ()
+[//]: # (#### What the Research Says?)
 
-#### What the Research Says?
+[//]: # ()
+[//]: # (I'm sure someone has something to say about this model. )
 
-I'm sure someone has something to say about this model. 
+[//]: # ()
+[//]: # (#### Alternatives)
 
-#### Alternatives
-
-- list some alternatives
+[//]: # ()
+[//]: # (- list some alternatives)

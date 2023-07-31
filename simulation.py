@@ -85,6 +85,32 @@ class DataMonitor:
 
         return series
 
+    def decayed_word_factors(self):
+        series = defaultdict(lambda: defaultdict(list))
+
+        for time, values in self.data_points[self.Category.STM][self.Action.STORE]:
+            # memory.original_value, memory.value, memory.age, memory.total_age
+            series[values[0]]["xs"].append(time)
+            series[values[0]]["valence"].append(values[1][0])
+            series[values[0]]["arousal"].append(values[1][1])
+            series[values[0]]["dominance"].append(values[1][2])
+
+        for time, values in self.data_points[self.Category.STM][self.Action.ADJUST]:
+            # memory.original_value, memory.value, memory.age, memory.total_age
+            series[values[0]]["xs"].append(time)
+            series[values[0]]["valence"].append(values[1][0])
+            series[values[0]]["arousal"].append(values[1][1])
+            series[values[0]]["dominance"].append(values[1][2])
+
+        for time, values in self.data_points[self.Category.STM][self.Action.FORGET]:
+            # memory.original_value, memory.value, memory.age, memory.total_age
+            series[values[0]]["xs"].append(time)
+            series[values[0]]["valence"].append(0)
+            series[values[0]]["arousal"].append(0)
+            series[values[0]]["dominance"].append(0)
+
+        return series
+
 
 class Simulation:
 

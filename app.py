@@ -1,31 +1,12 @@
-from report_helpers import rendering
 from pathlib import Path
-
-from shiny import Inputs, Outputs, Session, App, reactive, render, req, ui
-
+from shiny import Inputs, Outputs, Session, App, reactive, render, ui
 import matplotlib.pyplot as plt
 
-
+from report_helpers import rendering
+from report_helpers.rendering import get_markdown
 from simulation import Simulation
 
 report_path = Path(__file__).parent / "report"
-
-
-def get_all_markdown():
-    controls = []
-    markdown_files = report_path.glob('*.md')
-    for filename in markdown_files:
-        with open(filename) as f:
-            controls.append(ui.markdown(f.read()))
-
-    return controls
-
-
-def get_markdown(section):
-    filename = report_path / f"{section}.md"
-    with open(filename) as f:
-        return ui.markdown(f.read())
-
 
 app_ui = ui.page_fluid(
     ui.panel_title('Memory Simulation'),  # 1
@@ -33,16 +14,16 @@ app_ui = ui.page_fluid(
     #     ui.panel_sidebar(
     #     ),
     ui.panel_main(
-        get_markdown("background"),
-        # ui.output_table(id="results"),
-        get_markdown("atkinson_shiffrin_model"),
+        get_markdown("background", report_path),
+        get_markdown("atkinson_shiffrin_model", report_path),
         ui.output_ui(id="images"),
-        get_markdown("sensory_memory"),
-        get_markdown("short_term_memory"),
-        get_markdown("long_term_memory"),
-        get_markdown("learning"),
-        get_markdown("our_model"),
-        get_markdown("simulation_1"),
+        # get_markdown("sensory_memory", report_path),
+        # get_markdown("short_term_memory", report_path),
+        # get_markdown("long_term_memory", report_path),
+        # get_markdown("learning"),
+        get_markdown("our_model", report_path),
+
+        get_markdown("simulation_1", report_path),
         ui.br(),
         ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
         ui.input_slider(id="rehearsal_interval", label="Rehearsal Interval (s)", value=10, min=0, max=100),
@@ -51,6 +32,7 @@ app_ui = ui.page_fluid(
         ui.input_select(id="purge_strategy", label="STM Purge Strategy", choices=("oldest", "weakest")),
         ui.input_text(id="word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
         ui.input_action_button("run_simulation_1", "Re-Run Simulation"),
+        # ui.input_action_button("toggle_trace", "Toggle Trace Log"),
         ui.br(),
         ui.hr(),
         ui.h4("Simulation Results"),
@@ -58,9 +40,10 @@ app_ui = ui.page_fluid(
         ui.output_text_verbatim("rehearsal_words"),
 
         ui.h5("Words Recalled from STM"),
-        ui.output_ui("simulation_1_recall"),
+        ui.output_text_verbatim("simulation_1_recall"),
+
         ui.h5("Original Words Remembered from LTM"),
-        ui.output_ui("simulation_1_memory"),
+        ui.output_text_verbatim("simulation_1_memory"),
 
         ui.h5("STM Memory Age Fuzzing Factor over Time"),
         ui.output_plot("simulation_1_fuzz_factors"),
@@ -68,10 +51,14 @@ app_ui = ui.page_fluid(
         ui.output_plot("simulation_1_rehearsals"),
         ui.h5("Max Ages"),
         ui.output_plot("simulation_1_max_ages"),
-        ui.h5("Output Trace"),
+        ui.h5("Output Trace", id="s1-trace-header"),
         ui.output_ui("simulation_1_trace"),
-        #
-        get_markdown("simulation_2"),
+
+        ui.br(), ui.br(),
+        ui.hr(), ui.hr(),
+        ui.br(), ui.br(),
+
+        get_markdown("simulation_2", report_path),
         ui.br(),
         ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=5, min=0, max=100),
         ui.input_slider(id="s2_fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
@@ -84,16 +71,20 @@ app_ui = ui.page_fluid(
         ui.h5("Words To Remember"),
         ui.output_text_verbatim("simulation_2_rehearsal_words"),
         ui.h5("Recalled from Short Term Memory"),
-        ui.output_ui("simulation_2_recall"),
+        ui.output_text_verbatim("simulation_2_recall"),
         ui.h5("STM Memory Age Fuzzing Factor over Time"),
         ui.output_plot("simulation_2_fuzz_factors"),
+        ui.h5("Word Fuzziness in STM over Time"),
+        ui.output_plot("simulation_2_decayed_word_factors"),
+        ui.output_plot("simulation_2_decayed_word_factors_3d", width="800px", height="800px"),
         ui.h5("Max Ages"),
         ui.output_plot("simulation_2_max_ages"),
-        ui.h5("Output Trace"),
+        ui.h5("Output Trace", id="s2-trace-header"),
+        # ui.input_action_button("s2_toggle_trace", "Toggle Trace Log"),
         ui.output_ui("simulation_2_trace"),
 
         ui.hr(),
-        get_markdown("references"),
+        get_markdown("references", report_path),
 
     )
     # )
@@ -141,6 +132,21 @@ def server(input: Inputs, output: Outputs, session: Session):
         for line in s.get().data_monitor.trace_log_lines:
             log += f"{line} <br>"
         return log
+
+    # @reactive.Effect
+    # def _():
+    #     btn = input.toggle_trace()
+    #     if btn % 2 == 1:
+    #         trace = ui.output_ui(
+    #             "simulation_1_trace", simulation_1_trace(), 0, 100, 20
+    #         )
+    #         ui.insert_ui(
+    #             ui.div({"id": "s1-trace"}, trace),
+    #             selector="#s1-trace-header",
+    #             where="afterEnd",
+    #         )
+    #     elif btn > 0:
+    #         ui.remove_ui("#s1-trace")
 
     @output
     @render.text
@@ -256,6 +262,21 @@ def server(input: Inputs, output: Outputs, session: Session):
             log += f"{line} <br>"
         return log
 
+    # @reactive.Effect
+    # def _():
+    #     btn = input.toggle_trace()
+    #     if btn % 2 == 1:
+    #         trace = ui.output_ui(
+    #             "simulation_2_trace", simulation_2_trace(), 0, 100, 20
+    #         )
+    #         ui.insert_ui(
+    #             ui.div({"id": "s2-trace"}, trace),
+    #             selector="#s2-trace-header",
+    #             where="afterEnd",
+    #         )
+    #     elif btn > 0:
+    #         ui.remove_ui("#s2-trace")
+
     @output
     @render.text
     def simulation_2_rehearsal_words():
@@ -276,6 +297,47 @@ def server(input: Inputs, output: Outputs, session: Session):
                 ax.plot(item_series["xs"], item_series["ys"], linewidth=2.0, label=word)
 
         ax.legend(loc="upper right")
+
+        return fig
+
+    @output
+    @render.plot(alt="Decayed Valence for Words")
+    def simulation_2_decayed_word_factors():
+        plt.style.use('_mpl-gallery')
+
+        fig, ax = plt.subplots()
+
+        series = s2.get().data_monitor.decayed_word_factors()
+
+        for item, item_series in series.items():
+            word = s2.get().lookup_word_from_encoding(item)
+            ax.plot(item_series["xs"], item_series["valence"], linewidth=1.0, label=f"Valence ({word})")
+            ax.plot(item_series["xs"], item_series["arousal"], linewidth=1.0, label=f"Arousal ({word})")
+            ax.plot(item_series["xs"], item_series["dominance"], linewidth=1.0, label=f"Dominance ({word})")
+
+        ax.legend(loc="upper right")
+
+        return fig
+
+    @output
+    @render.plot(alt="Fuzziness of Words over time in 3D")
+    def simulation_2_decayed_word_factors_3d():
+        # plt.style.use('_mpl-gallery')
+
+        fig = plt.figure()
+        ax = plt.axes(projection='3d')
+
+        series = s2.get().data_monitor.decayed_word_factors()
+
+        for item, item_series in series.items():
+            word = s2.get().lookup_word_from_encoding(item)
+            ax.plot3D(item_series["valence"], item_series["arousal"], item_series["dominance"], linewidth=1.0, label=word)
+
+        ax.legend()
+        ax.set_xlabel('Valence')
+        ax.set_ylabel('Arousal')
+        ax.set_zlabel('Dominance')
+        ax.view_init(elev=10, azim=-35)
 
         return fig
 

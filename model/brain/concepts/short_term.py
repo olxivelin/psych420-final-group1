@@ -153,9 +153,11 @@ class ShortTermMemory:
 
         # TODO: Adjust this factor to be more realistic. Find data.
         fuzz_factor = (1 / ((max_duration - memory.age) or 1) ** 2)
+
+        updated_value = (memory.value[0] + fuzz_factor, memory.value[1] + fuzz_factor, memory.value[2] + fuzz_factor)
         self.data_monitor.add_data_point(
             category=self.data_monitor.Category.STM,
             action=self.data_monitor.Action.ADJUST,
-            value=[memory.original_value, memory.value, memory.age, memory.total_age, fuzz_factor]
+            value=[memory.original_value, updated_value, memory.age, memory.total_age, fuzz_factor]
         )
-        return memory.value[0] + fuzz_factor, memory.value[1] + fuzz_factor, memory.value[2] + fuzz_factor
+        return updated_value
