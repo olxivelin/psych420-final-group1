@@ -171,3 +171,6 @@ class Simulation:
     @rehearsal_list.setter
     def rehearsal_list(self, value):
         self._rehearsal_list = value
+
+    def set_stm_purge_strategy(self, strategy):
+        self.brain.hippocampus.short_term_memory.purge_strategy = strategy

@@ -29,72 +29,75 @@ def get_markdown(section):
 
 app_ui = ui.page_fluid(
     ui.panel_title('Memory Simulation'),  # 1
-    ui.layout_sidebar(
-        ui.panel_sidebar(
-        ),
-        ui.panel_main(
-            get_markdown("background"),
-            # ui.output_table(id="results"),
-            get_markdown("atkinson_shiffrin_model"),
-            ui.output_ui(id="images"),
-            get_markdown("sensory_memory"),
-            get_markdown("short_term_memory"),
-            get_markdown("long_term_memory"),
-            get_markdown("learning"),
-            get_markdown("our_model"),
-            get_markdown("simulation_1"),
-            ui.br(),
-            ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
-            ui.input_slider(id="rehearsal_interval", label="Rehearsal Interval (s)", value=10, min=0, max=100),
-            ui.input_slider(id="fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
-            ui.input_numeric(id="total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
-            ui.input_text(id="word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
-            ui.input_action_button("run_simulation_1", "Re-Run Simulation"),
-            ui.br(),
-            ui.hr(),
-            ui.h4("Simulation Results"),
-            ui.h5("Words Rehearsed"),
-            ui.output_text_verbatim("rehearsal_words"),
+    # ui.layout_sidebar(
+    #     ui.panel_sidebar(
+    #     ),
+    ui.panel_main(
+        get_markdown("background"),
+        # ui.output_table(id="results"),
+        get_markdown("atkinson_shiffrin_model"),
+        ui.output_ui(id="images"),
+        get_markdown("sensory_memory"),
+        get_markdown("short_term_memory"),
+        get_markdown("long_term_memory"),
+        get_markdown("learning"),
+        get_markdown("our_model"),
+        get_markdown("simulation_1"),
+        ui.br(),
+        ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
+        ui.input_slider(id="rehearsal_interval", label="Rehearsal Interval (s)", value=10, min=0, max=100),
+        ui.input_slider(id="fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
+        ui.input_numeric(id="total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
+        ui.input_select(id="purge_strategy", label="STM Purge Strategy", choices=("oldest", "weakest")),
+        ui.input_text(id="word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
+        ui.input_action_button("run_simulation_1", "Re-Run Simulation"),
+        ui.br(),
+        ui.hr(),
+        ui.h4("Simulation Results"),
+        ui.h5("Words Rehearsed"),
+        ui.output_text_verbatim("rehearsal_words"),
 
-            ui.h5("Words Recalled from STM"),
-            ui.output_ui("simulation_1_recall"),
-            ui.h5("Original Words Remembered from LTM"),
-            ui.output_ui("simulation_1_memory"),
+        ui.h5("Words Recalled from STM"),
+        ui.output_ui("simulation_1_recall"),
+        ui.h5("Original Words Remembered from LTM"),
+        ui.output_ui("simulation_1_memory"),
 
-            ui.h5("STM Memory Age Fuzzing Factor over Time"),
-            ui.output_plot("simulation_1_fuzz_factors"),
-            ui.h5("STM Memory Age over Time"),
-            ui.output_plot("simulation_1_rehearsals"),
-            ui.h5("Max Ages"),
-            ui.output_plot("simulation_1_max_ages"),
-            ui.h5("Output Trace"),
-            ui.output_ui("simulation_1_trace"),
-            #
-            get_markdown("simulation_2"),
-            ui.br(),
-            ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=5, min=0, max=100),
-            ui.input_slider(id="s2_fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
-            ui.input_text(id="s2_word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
-            ui.input_action_button("run_simulation_2", "Re-Run Simulation"),
-            ui.br(),
-            ui.hr(),
-            ui.h4("Simulation 2 Results"),
-            ui.h5("Words To Remember"),
-            ui.output_text_verbatim("simulation_2_rehearsal_words"),
-            ui.h5("Recalled from Short Term Memory"),
-            ui.output_ui("simulation_2_recall"),
-            ui.h5("STM Memory Age Fuzzing Factor over Time"),
-            ui.output_plot("simulation_2_fuzz_factors"),
-            ui.h5("Max Ages"),
-            ui.output_plot("simulation_2_max_ages"),
-            ui.h5("Output Trace"),
-            ui.output_ui("simulation_2_trace"),
+        ui.h5("STM Memory Age Fuzzing Factor over Time"),
+        ui.output_plot("simulation_1_fuzz_factors"),
+        ui.h5("STM Memory Age over Time"),
+        ui.output_plot("simulation_1_rehearsals"),
+        ui.h5("Max Ages"),
+        ui.output_plot("simulation_1_max_ages"),
+        ui.h5("Output Trace"),
+        ui.output_ui("simulation_1_trace"),
+        #
+        get_markdown("simulation_2"),
+        ui.br(),
+        ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=5, min=0, max=100),
+        ui.input_slider(id="s2_fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
+        ui.input_select(id="s2_purge_strategy", label="STM Purge Strategy", choices=("oldest", "weakest")),
+        ui.input_text(id="s2_word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
+        ui.input_action_button("run_simulation_2", "Re-Run Simulation"),
+        ui.br(),
+        ui.hr(),
+        ui.h4("Simulation 2 Results"),
+        ui.h5("Words To Remember"),
+        ui.output_text_verbatim("simulation_2_rehearsal_words"),
+        ui.h5("Recalled from Short Term Memory"),
+        ui.output_ui("simulation_2_recall"),
+        ui.h5("STM Memory Age Fuzzing Factor over Time"),
+        ui.output_plot("simulation_2_fuzz_factors"),
+        ui.h5("Max Ages"),
+        ui.output_plot("simulation_2_max_ages"),
+        ui.h5("Output Trace"),
+        ui.output_ui("simulation_2_trace"),
 
-            ui.hr(),
-            get_markdown("references"),
+        ui.hr(),
+        get_markdown("references"),
 
-        )
-    ))
+    )
+    # )
+)
 
 
 def server(input: Inputs, output: Outputs, session: Session):
@@ -109,6 +112,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         distraction_level = (input.distraction_level() / 100)
         fuzziness_threshold = (input.fuzzy_threshold() / 1000)
         total_time = input.total_time()
+        purge_strategy = input.purge_strategy()
 
         word_list = [x.strip().lower() for x in input.word_list().split(',')]
 
@@ -118,6 +122,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
         p.set(5 / 30, message="Loading sensory encodings, please wait...")
         s.get().preload(infile)
+        s.get().set_stm_purge_strategy(purge_strategy)
         p.set(20 / 30, message="Simulating rehearsal over time, please wait...")
         g = ""
         for word_pairs in s.get().run_1(distraction_level=distraction_level,
@@ -218,6 +223,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         distraction_level = 0
         fuzziness_threshold = (input.s2_fuzzy_threshold() / 1000)
         total_time = input.s2_total_time()
+        purge_strategy = input.s2_purge_strategy()
 
         word_list = [x.strip().lower() for x in input.s2_word_list().split(',')]
 
@@ -227,6 +233,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
         p.set(5 / 30, message="Loading sensory encodings, please wait...")
         s2.get().preload(infile)
+        s2.get().set_stm_purge_strategy(purge_strategy)
         p.set(20 / 30, message="Simulating time passing, please wait...")
         g = ""
         for word_pairs in s2.get().run_2(distraction_level=distraction_level, total_time=total_time, fuzzy_threshold=fuzziness_threshold):
