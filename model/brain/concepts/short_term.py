@@ -4,10 +4,10 @@ from random import random, randint
 STRENGTH_THRESHOLD = 5  # how strong the memory in stm has to be before it is moved to LTM
 STRENGTH_BOOST = 2  # how much to boost the strength if this is an item already in LTM
 STRENGTH_INCREMENT = 1  # how much to increase strength each time an item already in STM is added again
-
 # TODO: Rate of decay -> should be rapid for first 18 seconds - Peterson and Peterson (1959)
 #  https://psycnet-apa-org.proxy.lib.uwaterloo.ca/fulltext/1960-05499-001.pdf
 #  exponential decay perhaps?
+STRENGTH_DECREMENT = 1  # how much to decrease strength each second
 
 
 class MemoryRegister:
@@ -31,6 +31,7 @@ class ShortTermMemory:
         self.registers = []
         self.hippocampus = hippocampus
         self.data_monitor = data_monitor
+        self.purge_strategy = "oldest"
 
     def __str__(self):
         return f"Registers: \n {[str(r) for r in self.registers]} \n"
@@ -56,6 +57,7 @@ class ShortTermMemory:
         for memory in self.registers:
             memory.age += 1
             memory.total_age += 1
+            memory.strength -= STRENGTH_DECREMENT
             memory.value = self.fuzz(memory)
             if memory.age >= self.current_max_duration():
                 forget.append(memory)
@@ -74,7 +76,12 @@ class ShortTermMemory:
                                              action=self.data_monitor.Action.FORGET,
                                              value=[memory.original_value, memory.value, memory.age, memory.total_age])
             self.data_monitor.log(f"Item too old forgetting {memory}\n")
+            self.data_monitor.max_ages.append(memory.total_age)
             self.registers.remove(memory)
+
+    def end_simulation(self):
+        for r in self.registers:
+            self.data_monitor.max_ages.append(r.total_age)
 
     def potentially_forget_oldest(self):
         max_quantity = self.current_max_capacity()
@@ -84,8 +91,27 @@ class ShortTermMemory:
                 self.data_monitor.add_data_point(category=self.data_monitor.Category.STM,
                                                  action=self.data_monitor.Action.FORGET,
                                                  value=[r.original_value, r.value, r.age, r.total_age])
+                self.data_monitor.max_ages.append(r.total_age)
                 self.data_monitor.log(f"Too many items forgetting {str(r)}")
             self.registers = self.registers[0:max_quantity]
+
+    def potentially_forget_weakest(self):
+        max_quantity = self.current_max_capacity()
+        if len(self.registers) > max_quantity:
+            self.registers.sort(key=lambda x: x.strength, reverse=True)
+            for r in self.registers[max_quantity:]:
+                self.data_monitor.add_data_point(category=self.data_monitor.Category.STM,
+                                                 action=self.data_monitor.Action.FORGET,
+                                                 value=[r.original_value, r.value, r.age, r.total_age])
+                self.data_monitor.max_ages.append(r.total_age)
+                self.data_monitor.log(f"Too many items forgetting {str(r)}")
+            self.registers = self.registers[0:max_quantity]
+
+    def get_overflow_purge_function(self):
+        if self.purge_strategy == "oldest":
+            return self.potentially_forget_oldest
+        elif self.purge_strategy == "weakest":
+            return self.potentially_forget_weakest
 
     def add(self, value):
         # if it is already in sort term memory reset the age.
@@ -105,17 +131,17 @@ class ShortTermMemory:
             # to mimic the idea of it being easier to remember things you know -
             # TODO: find data to back this up. Right now Caroline *thinks* she read this,
             #  but isn't 100% sure.
-            strength = 0
+            strength = STRENGTH_INCREMENT
             if value:
                 existing_memory = self.hippocampus.retrieve_from_long_term_storage(*value)
                 if existing_memory:
-                    strength = STRENGTH_BOOST
+                    strength += STRENGTH_BOOST
                     self.data_monitor.log(f"Item {value} recognized, boosting strength")
 
                 self.registers.append(MemoryRegister(value, 0, strength, self.data_monitor))
 
-        # if we have too many items then remove the oldest item.
-        self.potentially_forget_oldest()
+        # if we have too many items then purge them according to the purge strategy.
+        self.get_overflow_purge_function()()
 
     def retrieve(self, with_original):
         if with_original:
@@ -123,7 +149,10 @@ class ShortTermMemory:
         return [memory.value for memory in self.registers]
 
     def fuzz(self, memory):
-        fuzz_factor = 1 / ((self.current_max_duration() - memory.age) or 1) ** 2
+        max_duration = self.current_max_duration()
+
+        # TODO: Adjust this factor to be more realistic. Find data.
+        fuzz_factor = (1 / ((max_duration - memory.age) or 1) ** 2)
         self.data_monitor.add_data_point(
             category=self.data_monitor.Category.STM,
             action=self.data_monitor.Action.ADJUST,

@@ -1,60 +1,29 @@
-from .data_structures import BinarySearchTree
-
-# TODO: not sure about this, it is being used to allow multiple value lists to be returned if
-# they are all within the threshold amount.
-ERROR_THRESHOLD = 0.08
-
-
-class Factor:
-    def __init__(self, data_monitor):
-        self._tree = BinarySearchTree(data_monitor)
-        self._weight = 1
-        self.data_monitor = data_monitor
-
-    def __str__(self):
-        return f"Weight: {self._weight} \n Tree: {self._tree}"
-
-    def get_error(self, item, value):
-        #TODO: pretty sure I'm not using weight the way we want to here.
-        error = abs((item[1] - value) * self._weight)
-        return error
-
-    def add_item(self, value, data):
-        self._tree.add(value, data)
-
-    def closest_matches(self, value):
-        values = self._tree.fuzzy_find(value) or [[], 0]
-
-        closest_matches = []
-        for item in values:
-            if item:
-                if self.get_error(item, value) <= ERROR_THRESHOLD:
-                    closest_matches += item[0]
-        return closest_matches
-
-    def adjust_weight(self, word, value, was_correct):
-        # TODO: This should likely be using something other than a fixed value.
-        matches = self.closest_matches(value)
-        if word in matches:
-            self._weight += 0.0001
-        else:
-            if not was_correct:
-                self._weight -= 0.0001
+from .data_structures import Factor
 
 
 class LongTermMemory:
 
-    def __init__(self, data_monitor):
+    def __init__(self, data_monitor, fuzzy_threshold=0.03):
         self._valence_factor = Factor(data_monitor)
         self._dominance_factor = Factor(data_monitor)
         self._arousal_factor = Factor(data_monitor)
         self.data_monitor = data_monitor
+        self.fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Valence: \n {self._valence_factor} \n Arousal: \n {self._arousal_factor} \n Dominance: \n {self._dominance_factor}"
 
     def time_tick(self):
         pass
+
+    def end_simulation(self):
+        pass
+
+    def set_fuzzy_threshold(self,  fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
+        self._valence_factor.set_fuzzy_threshold(fuzzy_threshold)
+        self._dominance_factor.set_fuzzy_threshold(fuzzy_threshold)
+        self._arousal_factor.set_fuzzy_threshold(fuzzy_threshold)
 
     def prime(self, data, valence, arousal, dominance):
         self._valence_factor.add_item(valence, data)

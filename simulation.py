@@ -26,6 +26,7 @@ class DataMonitor:
         self.elapsed_time = 0
         self.trace_log_lines = []
         self.data_points = defaultdict(lambda: defaultdict(list))
+        self.max_ages = []
 
     def tick(self):
         self.elapsed_time += 1
@@ -48,10 +49,10 @@ class DataMonitor:
             series[values[0]]["xs"].append(time)
             series[values[0]]["ys"].append(values[4])
 
-        for time, values in self.data_points[self.Category.STM][self.Action.FORGET]:
-            # memory.original_value, memory.value, memory.age, memory.total_age
-            series[values[0]]["xs"].append(time)
-            series[values[0]]["ys"].append(0)
+        # for time, values in self.data_points[self.Category.STM][self.Action.FORGET]:
+        #     # memory.original_value, memory.value, memory.age, memory.total_age
+        #     series[values[0]]["xs"].append(time)
+        #     series[values[0]]["ys"].append(0)
         return series
 
     def rehearsal_points(self):
@@ -87,21 +88,22 @@ class DataMonitor:
 
 class Simulation:
 
-    def __init__(self, word_list=["person", "man", "woman", "camera", "tv", ]):
+    def __init__(self, word_list=None):
+        if word_list is None:
+            word_list = ["person", "man", "woman", "camera", "tv", ]
         self.data_monitor = DataMonitor()
         self.brain = Brain(self.data_monitor)
         self._rehearsal_list = word_list
 
-    def run_1(self, distraction_level=0.2, total_time=100):
+    def run_1(self, distraction_level=0.2, total_time=100, rehearsal_interval=10, fuzzy_threshold=0.03):
         self.brain.set_distraction_level(distraction_level)
-
-        rehearsal_rate = 10
+        self.brain.set_fuzzy_threshold(fuzzy_threshold)
 
         for i in range(total_time):
             self.data_monitor.tick()
             self.brain.time_tick()
 
-            rehearsal_index = i % rehearsal_rate
+            rehearsal_index = i % rehearsal_interval
             if rehearsal_index < len(self.rehearsal_list):
                 self.brain.rehearse(self.rehearsal_list[rehearsal_index])
 
@@ -111,15 +113,42 @@ class Simulation:
         #     print("Recalled based on Short Term Memory")
         #     print(f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} \n")
 
+        self.brain.end_simulation()
         self.data_monitor.print_log()
 
-        return self.brain.remember(with_original=True)
+        return self.remember_from_ltm()
         # for i in range(1000):
         #     self.clock.tick()
         #     self.brain.time_tick(with_trace)
         #
         # # print(self.brain)
         # print(self.brain.remember(with_original=True))
+
+    def run_2(self, distraction_level=0, total_time=20, fuzzy_threshold=0.03):
+        self.brain.set_distraction_level(distraction_level)
+        self.brain.set_fuzzy_threshold(fuzzy_threshold)
+
+        # Load all the words for the trial
+        for word in self.rehearsal_list:
+            self.brain.rehearse(word)
+
+        # Let time pass without rehearsing
+        for i in range(0, total_time):
+            self.data_monitor.tick()
+            self.brain.time_tick()
+
+        self.brain.end_simulation()
+        self.data_monitor.print_log()
+
+        return self.brain.recall(with_original=True)
+
+    def recall_from_stm(self, with_original=True):
+        return self.brain.recall(with_original=True)
+
+    def remember_from_ltm(self, word_list=None):
+        if word_list is None:
+            word_list = self.rehearsal_list
+        return self.brain.remember_from_ltm(word_list)
 
     def preload(self, data_file):
         with open(data_file, newline='') as csvfile:
@@ -142,3 +171,6 @@ class Simulation:
     @rehearsal_list.setter
     def rehearsal_list(self, value):
         self._rehearsal_list = value
+
+    def set_stm_purge_strategy(self, strategy):
+        self.brain.hippocampus.short_term_memory.purge_strategy = strategy

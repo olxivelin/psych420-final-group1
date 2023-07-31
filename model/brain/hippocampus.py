@@ -14,6 +14,9 @@ class Hippocampus:
     def time_tick(self):
         self.short_term_memory.time_tick()
 
+    def end_simulation(self):
+        self.short_term_memory.end_simulation()
+
     def process_sensory_input(self, sensory_input):
         self.short_term_memory.add(sensory_input)
 
