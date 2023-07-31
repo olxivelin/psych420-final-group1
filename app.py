@@ -76,7 +76,7 @@ app_ui = ui.page_fluid(
         ui.output_plot("simulation_2_fuzz_factors"),
         ui.h5("Word Fuzziness in STM over Time"),
         ui.output_plot("simulation_2_decayed_word_factors"),
-        ui.output_plot("simulation_2_decayed_word_factors_3d"),
+        ui.output_plot("simulation_2_decayed_word_factors_3d", width="800px", height="800px"),
         ui.h5("Max Ages"),
         ui.output_plot("simulation_2_max_ages"),
         ui.h5("Output Trace", id="s2-trace-header"),
@@ -325,19 +325,19 @@ def server(input: Inputs, output: Outputs, session: Session):
         # plt.style.use('_mpl-gallery')
 
         fig = plt.figure()
-        ax = fig.add_subplot(projection='3d')
+        ax = plt.axes(projection='3d')
 
         series = s2.get().data_monitor.decayed_word_factors()
 
         for item, item_series in series.items():
             word = s2.get().lookup_word_from_encoding(item)
-            ax.plot(item_series["valence"], item_series["arousal"], item_series["dominance"], linewidth=1.0, label=word)
+            ax.plot3D(item_series["valence"], item_series["arousal"], item_series["dominance"], linewidth=1.0, label=word)
 
         ax.legend()
         ax.set_xlabel('Valence')
         ax.set_ylabel('Arousal')
         ax.set_zlabel('Dominance')
-        ax.view_init(elev=20., azim=-35)
+        ax.view_init(elev=10, azim=-35)
 
         return fig
 
