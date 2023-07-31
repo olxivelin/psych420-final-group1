@@ -118,6 +118,8 @@ class ShortTermMemory:
             return self.potentially_forget_weakest
 
     def fuzzy_equal(self, x, y):
+        if x is None or y is None:
+            return False
         return (((x[0] - self.fuzzy_threshold) <= y[0] <= (x[0] + self.fuzzy_threshold)) and
                 ((x[1] - self.fuzzy_threshold) <= y[1] <= (x[1] + self.fuzzy_threshold)) and
                 ((x[2] - self.fuzzy_threshold) <= y[2] <= (x[2] + self.fuzzy_threshold))
