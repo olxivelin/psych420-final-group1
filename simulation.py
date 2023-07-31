@@ -116,7 +116,7 @@ class Simulation:
         self.brain.end_simulation()
         self.data_monitor.print_log()
 
-        return self.brain.remember_from_ltm(with_original=True)
+        return self.remember_from_ltm()
         # for i in range(1000):
         #     self.clock.tick()
         #     self.brain.time_tick(with_trace)
@@ -124,7 +124,7 @@ class Simulation:
         # # print(self.brain)
         # print(self.brain.remember(with_original=True))
 
-    def run_2(self, distraction_level=0, total_time=30, fuzzy_threshold=0.03):
+    def run_2(self, distraction_level=0, total_time=20, fuzzy_threshold=0.03):
         self.brain.set_distraction_level(distraction_level)
         self.brain.set_fuzzy_threshold(fuzzy_threshold)
 
@@ -133,7 +133,7 @@ class Simulation:
             self.brain.rehearse(word)
 
         # Let time pass without rehearsing
-        for i in range(total_time):
+        for i in range(0, total_time):
             self.data_monitor.tick()
             self.brain.time_tick()
 
@@ -141,6 +141,14 @@ class Simulation:
         self.data_monitor.print_log()
 
         return self.brain.recall(with_original=True)
+
+    def recall_from_stm(self, with_original=True):
+        return self.brain.recall(with_original=True)
+
+    def remember_from_ltm(self, word_list=None):
+        if word_list is None:
+            word_list = self.rehearsal_list
+        return self.brain.remember_from_ltm(word_list)
 
     def preload(self, data_file):
         with open(data_file, newline='') as csvfile:

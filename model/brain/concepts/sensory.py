@@ -33,7 +33,7 @@ class SensoryMemory:
         self._arousal_factor.add_item(float(arousal), word)
         self.word_mapping[word] = (float(valence), float(arousal), float(dominance))
 
-    def encode_input(self, sensed_input):
+    def encode(self, sensed_input):
         return self.word_mapping.get(sensed_input)
 
     def decode(self, valence, arousal, dominance):
@@ -50,7 +50,7 @@ class SensoryMemory:
 
     def sense(self):
         word = random.choice(list(self.word_mapping.keys()))
-        data = self.encode_input(word)
+        data = self.encode(word)
         return data
 
     # def learn(self, word):

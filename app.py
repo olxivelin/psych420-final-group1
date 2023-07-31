@@ -1,9 +1,10 @@
+from report_helpers import rendering
 from pathlib import Path
 
 from shiny import Inputs, Outputs, Session, App, reactive, render, req, ui
 
 import matplotlib.pyplot as plt
-import numpy as np
+
 
 from simulation import Simulation
 
@@ -54,8 +55,12 @@ app_ui = ui.page_fluid(
             ui.h4("Simulation Results"),
             ui.h5("Words Rehearsed"),
             ui.output_text_verbatim("rehearsal_words"),
-            ui.h5("Words Remembered"),
+
+            ui.h5("Words Recalled from STM"),
+            ui.output_ui("simulation_1_recall"),
+            ui.h5("Original Words Remembered from LTM"),
             ui.output_ui("simulation_1_memory"),
+
             ui.h5("STM Memory Age Fuzzing Factor over Time"),
             ui.output_plot("simulation_1_fuzz_factors"),
             ui.h5("STM Memory Age over Time"),
@@ -67,7 +72,7 @@ app_ui = ui.page_fluid(
             #
             get_markdown("simulation_2"),
             ui.br(),
-            ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=100, min=0, max=10000),
+            ui.input_numeric(id="s2_total_time", label="Simulation Time Length (s)", value=5, min=0, max=100),
             ui.input_slider(id="s2_fuzzy_threshold", label="Fuzziness Threshold", value=3, min=0, max=1000),
             ui.input_text(id="s2_word_list", label="Words to Rehearse", value="person, man, woman, camera, tv"),
             ui.input_action_button("run_simulation_2", "Re-Run Simulation"),
@@ -97,7 +102,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     s = reactive.Value(Simulation())
     s2 = reactive.Value(Simulation())
 
-    @reactive.Calc
+    @reactive.Effect
     def run_simulation_1():
         input.run_simulation_1()
 
@@ -135,7 +140,12 @@ def server(input: Inputs, output: Outputs, session: Session):
     @output
     @render.text
     def simulation_1_memory():
-        return run_simulation_1()
+        return rendering.render_recalled_words(s.get().remember_from_ltm())
+
+    @output
+    @render.text
+    def simulation_1_recall():
+        return rendering.render_recalled_words(s.get().recall_from_stm())
 
     @output
     @render.text
@@ -200,8 +210,8 @@ def server(input: Inputs, output: Outputs, session: Session):
         fig, ax = plt.subplots()
         ax.hist(x)
         return fig
-    #
-    @reactive.Calc
+
+    @reactive.Effect
     def run_simulation_2():
         input.run_simulation_2()
 
@@ -219,9 +229,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         s2.get().preload(infile)
         p.set(20 / 30, message="Simulating time passing, please wait...")
         g = ""
-        for word_pairs in s2.get().run_2(distraction_level=distraction_level,
-                                        total_time=total_time,
-                                        fuzzy_threshold=fuzziness_threshold):
+        for word_pairs in s2.get().run_2(distraction_level=distraction_level, total_time=total_time, fuzzy_threshold=fuzziness_threshold):
             p.set(30 / 30, message="Recalling from short term memory, please wait...")
             g += f"Input: {word_pairs[0]} Recalled: {word_pairs[1]} Strength: {word_pairs[2]} <br>"
         p.close()
@@ -231,7 +239,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @output
     @render.text
     def simulation_2_recall():
-        return run_simulation_2()
+        return rendering.render_recalled_words(s2.get().recall_from_stm())
 
     @output
     @render.text
