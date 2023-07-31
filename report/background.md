@@ -1,4 +1,4 @@
 ## Background
 
 
-### What is a Memory Model?
+[//]: # (### What is a Memory Model?)
