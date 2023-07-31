@@ -3,13 +3,17 @@ from .concepts.short_term import ShortTermMemory
 
 class Hippocampus:
 
-    def __init__(self, cortex, data_monitor):
+    def __init__(self, cortex, data_monitor, fuzzy_threshold=0.03):
         self.cortex = cortex
         self.short_term_memory = ShortTermMemory(self, data_monitor)
         self.data_monitor = data_monitor
+        self.fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Short Term Memory: \n {self.short_term_memory} \n"
+
+    def set_fuzzy_threshold(self, fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
 
     def time_tick(self):
         self.short_term_memory.time_tick()

@@ -27,14 +27,18 @@ class MemoryRegister:
 
 class ShortTermMemory:
 
-    def __init__(self, hippocampus, data_monitor):
+    def __init__(self, hippocampus, data_monitor, fuzzy_threshold=0.03):
         self.registers = []
         self.hippocampus = hippocampus
         self.data_monitor = data_monitor
         self.purge_strategy = "oldest"
+        self.fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Registers: \n {[str(r) for r in self.registers]} \n"
+
+    def set_fuzzy_threshold(self, fuzzy_threshold):
+        self.fuzzy_threshold = fuzzy_threshold
 
     # Based on Miller's Magical Number Seven
     # https://journals-scholarsportal-info.proxy.lib.uwaterloo.ca/details/0033295x/v101i0002/343_tmnspooocfpi.xml
@@ -113,18 +117,24 @@ class ShortTermMemory:
         elif self.purge_strategy == "weakest":
             return self.potentially_forget_weakest
 
+    def fuzzy_equal(self, x, y):
+        return (((x[0] - self.fuzzy_threshold) <= y[0] <= (x[0] + self.fuzzy_threshold)) and
+                ((x[1] - self.fuzzy_threshold) <= y[1] <= (x[1] + self.fuzzy_threshold)) and
+                ((x[2] - self.fuzzy_threshold) <= y[2] <= (x[2] + self.fuzzy_threshold))
+                )
+
     def add(self, value):
         # if it is already in sort term memory reset the age.
         exists = False
         for memory in self.registers:
-            # TODO: since we're storing the fuzzed value in memory.value I had to change
-            #  this to compare with original_value, which isn't what we want to do,
-            #  this likely needs to do a fuzzy match similar to the LTM look up rather than
-            #  an exact match like this, and then we can compare to memory.value.
-            if memory.original_value == value:
+            #  since we're storing the fuzzed value in memory.value this
+            #  needs to do a fuzzy match similar to the LTM look up rather than
+            #  an exact match.
+            if self.fuzzy_equal(memory.value, value):
                 exists = True
                 memory.age = 0
                 memory.strength += STRENGTH_INCREMENT  # The more you see something the stronger the memory
+                memory.value = value  # Reset to the original encoding as we've refreshed our input
 
         if not exists:
             # see if memory is already in long term memory and boost strength
