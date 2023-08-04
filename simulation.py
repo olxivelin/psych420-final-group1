@@ -122,8 +122,8 @@ class Simulation:
         self._rehearsal_list = word_list
 
     def run_1(self, distraction_level=0.2, total_time=100, rehearsal_interval=10, fuzzy_threshold=0.03):
-        self.brain.set_distraction_level(distraction_level)
-        self.brain.set_fuzzy_threshold(fuzzy_threshold)
+        self.brain.distraction_level = distraction_level
+        self.brain.fuzzy_threshold = fuzzy_threshold
 
         for i in range(total_time):
             self.data_monitor.tick()
@@ -151,8 +151,8 @@ class Simulation:
         # print(self.brain.remember(with_original=True))
 
     def run_2(self, distraction_level=0, total_time=20, fuzzy_threshold=0.03):
-        self.brain.set_distraction_level(distraction_level)
-        self.brain.set_fuzzy_threshold(fuzzy_threshold)
+        self.brain.distraction_level = distraction_level
+        self.brain.fuzzy_threshold = fuzzy_threshold
 
         # Load all the words for the trial
         for word in self.rehearsal_list:
@@ -198,5 +198,10 @@ class Simulation:
     def rehearsal_list(self, value):
         self._rehearsal_list = value
 
-    def set_stm_purge_strategy(self, strategy):
+    @property
+    def stm_purge_strategy(self):
+        return self.brain.hippocampus.short_term_memory.purge_strategy
+
+    @stm_purge_strategy.setter
+    def stm_purge_strategy(self, strategy):
         self.brain.hippocampus.short_term_memory.purge_strategy = strategy

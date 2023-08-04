@@ -9,7 +9,7 @@ There is a hosted version of the final report: https://cpsimpson.github.io/psych
 2. Generate shinylive website output
     `shinylive export . docs`
 3. Run local python static website
-    `python3 -m http.server --directory docs --bind localhost 8008`
+    `python3 -m http.server --directory docs --bind 0.0.0.0 8008`
 4. Open in browser
     `http://127.0.0.1:8008`
 

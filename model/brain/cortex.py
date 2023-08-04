@@ -8,15 +8,20 @@ class Cortex:
         self.sensory_memory = SensoryMemory(data_monitor)
         self.long_term_memory = LongTermMemory(data_monitor)
         self.data_monitor = data_monitor
-        self.fuzzy_threshold = fuzzy_threshold
+        self._fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Sensory Memory: \n {self.sensory_memory} \n Long Term Memory: \n {self.long_term_memory} \n"
 
-    def set_fuzzy_threshold(self,  fuzzy_threshold):
-        self.fuzzy_threshold = fuzzy_threshold
-        self.long_term_memory.set_fuzzy_threshold(fuzzy_threshold)
-        self.sensory_memory.set_fuzzy_threshold(fuzzy_threshold)
+    @property
+    def fuzzy_threshold(self):
+        return self._fuzzy_threshold
+
+    @fuzzy_threshold.setter
+    def fuzzy_threshold(self, fuzzy_threshold):
+        self._fuzzy_threshold = fuzzy_threshold
+        self.long_term_memory.fuzzy_threshold = fuzzy_threshold
+        self.sensory_memory.fuzzy_threshold = fuzzy_threshold
 
     def preload(self, word, valence, arousal, dominance):
         self.sensory_memory.prime(word, valence, arousal, dominance)

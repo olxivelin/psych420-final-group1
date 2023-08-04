@@ -8,7 +8,7 @@ class LongTermMemory:
         self._dominance_factor = Factor(data_monitor)
         self._arousal_factor = Factor(data_monitor)
         self.data_monitor = data_monitor
-        self.fuzzy_threshold = fuzzy_threshold
+        self._fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Valence: \n {self._valence_factor} \n Arousal: \n {self._arousal_factor} \n Dominance: \n {self._dominance_factor}"
@@ -19,11 +19,16 @@ class LongTermMemory:
     def end_simulation(self):
         pass
 
-    def set_fuzzy_threshold(self,  fuzzy_threshold):
-        self.fuzzy_threshold = fuzzy_threshold
-        self._valence_factor.set_fuzzy_threshold(fuzzy_threshold)
-        self._dominance_factor.set_fuzzy_threshold(fuzzy_threshold)
-        self._arousal_factor.set_fuzzy_threshold(fuzzy_threshold)
+    @property
+    def fuzzy_threshold(self):
+        return self._fuzzy_threshold
+
+    @fuzzy_threshold.setter
+    def fuzzy_threshold(self, fuzzy_threshold):
+        self._fuzzy_threshold = fuzzy_threshold
+        self._valence_factor.fuzzy_threshold = fuzzy_threshold
+        self._dominance_factor.fuzzy_threshold = fuzzy_threshold
+        self._arousal_factor.fuzzy_threshold = fuzzy_threshold
 
     def prime(self, data, valence, arousal, dominance):
         self._valence_factor.add_item(valence, data)

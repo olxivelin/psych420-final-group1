@@ -32,13 +32,18 @@ class ShortTermMemory:
         self.hippocampus = hippocampus
         self.data_monitor = data_monitor
         self.purge_strategy = "oldest"
-        self.fuzzy_threshold = fuzzy_threshold
+        self._fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Registers: \n {[str(r) for r in self.registers]} \n"
 
-    def set_fuzzy_threshold(self, fuzzy_threshold):
-        self.fuzzy_threshold = fuzzy_threshold
+    @property
+    def fuzzy_threshold(self):
+        return self._fuzzy_threshold
+
+    @fuzzy_threshold.setter
+    def fuzzy_threshold(self, fuzzy_threshold):
+        self._fuzzy_threshold = fuzzy_threshold
 
     # Based on Miller's Magical Number Seven
     # https://journals-scholarsportal-info.proxy.lib.uwaterloo.ca/details/0033295x/v101i0002/343_tmnspooocfpi.xml
@@ -88,21 +93,15 @@ class ShortTermMemory:
             self.data_monitor.max_ages.append(r.total_age)
 
     def potentially_forget_oldest(self):
-        max_quantity = self.current_max_capacity()
-        if len(self.registers) > max_quantity:
-            self.registers.sort(key=lambda x: x.age)
-            for r in self.registers[max_quantity:]:
-                self.data_monitor.add_data_point(category=self.data_monitor.Category.STM,
-                                                 action=self.data_monitor.Action.FORGET,
-                                                 value=[r.original_value, r.value, r.age, r.total_age])
-                self.data_monitor.max_ages.append(r.total_age)
-                self.data_monitor.log(f"Too many items forgetting {str(r)}")
-            self.registers = self.registers[0:max_quantity]
+        self.potentially_forget(key=lambda x: x.age, reverse=False)
 
     def potentially_forget_weakest(self):
+        self.potentially_forget(key=lambda x: x.strength, reverse=True)
+
+    def potentially_forget(self, key, reverse):
         max_quantity = self.current_max_capacity()
         if len(self.registers) > max_quantity:
-            self.registers.sort(key=lambda x: x.strength, reverse=True)
+            self.registers.sort(key=key, reverse=reverse)
             for r in self.registers[max_quantity:]:
                 self.data_monitor.add_data_point(category=self.data_monitor.Category.STM,
                                                  action=self.data_monitor.Action.FORGET,

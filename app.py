@@ -113,7 +113,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
         p.set(5 / 30, message="Loading sensory encodings, please wait...")
         s.get().preload(infile)
-        s.get().set_stm_purge_strategy(purge_strategy)
+        s.get().stm_purge_strategy = purge_strategy
         p.set(20 / 30, message="Simulating rehearsal over time, please wait...")
         g = ""
         for word_pairs in s.get().run_1(distraction_level=distraction_level,
@@ -239,7 +239,7 @@ def server(input: Inputs, output: Outputs, session: Session):
         infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
         p.set(5 / 30, message="Loading sensory encodings, please wait...")
         s2.get().preload(infile)
-        s2.get().set_stm_purge_strategy(purge_strategy)
+        s2.get().stm_purge_strategy = purge_strategy
         p.set(20 / 30, message="Simulating time passing, please wait...")
         g = ""
         for word_pairs in s2.get().run_2(distraction_level=distraction_level, total_time=total_time, fuzzy_threshold=fuzziness_threshold):

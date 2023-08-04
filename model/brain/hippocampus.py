@@ -7,13 +7,18 @@ class Hippocampus:
         self.cortex = cortex
         self.short_term_memory = ShortTermMemory(self, data_monitor)
         self.data_monitor = data_monitor
-        self.fuzzy_threshold = fuzzy_threshold
+        self._fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):
         return f"Short Term Memory: \n {self.short_term_memory} \n"
 
-    def set_fuzzy_threshold(self, fuzzy_threshold):
-        self.fuzzy_threshold = fuzzy_threshold
+    @property
+    def fuzzy_threshold(self):
+        return self._fuzzy_threshold
+
+    @fuzzy_threshold.setter
+    def fuzzy_threshold(self, fuzzy_threshold):
+        self._fuzzy_threshold = fuzzy_threshold
 
     def time_tick(self):
         self.short_term_memory.time_tick()
