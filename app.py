@@ -15,13 +15,6 @@ app_ui = ui.page_fluid(
     #     ),
     ui.panel_main(
         get_markdown("background", report_path),
-        # get_markdown("atkinson_shiffrin_model", report_path),
-        # ui.output_ui(id="images", inline=False),
-        # get_markdown("sensory_memory", report_path),
-        # get_markdown("short_term_memory", report_path),
-        # get_markdown("long_term_memory", report_path),
-        # get_markdown("learning"),
-        # get_markdown("our_model", report_path),
 
         get_markdown("simulation_1", report_path),
         ui.br(),
@@ -374,11 +367,8 @@ def server(input: Inputs, output: Outputs, session: Session):
         fig, ax = plt.subplots()
 
         probs = s2.get().data_monitor.rundus_results_probabilities()
-        rundus_probs = []
 
         ax.plot(range(1, len(probs) + 1), probs, linewidth=2.0, label="Model recall probability")
-
-        ax.plot(range(1, len(rundus_probs) + 1), probs, linewidth=2.0, label="Model recall probability")
 
         ax.legend(loc="upper right")
 
