@@ -170,6 +170,7 @@ _Figure 3: A tree-like hierarchical representation of semantic knowledge that fo
 ![semantic_tree.png](images/semantic_tree.png)
 
 _Figure 4: A neural network representation of semantic knowledge_
+
 ![neural_tree.png](images/neural_network.png) 
 
 
@@ -185,9 +186,7 @@ memory traces. The sum of these activations can be thought of as an
 system will “recognize” the stimuli, if the echo does not reach the 
 threshold, then it will not recognize the stimulus (Figure 5).[19]
 
-_Figure 5: A representation of multiple memory traces in 
-a Minerva model, in which a stimulus is being compared with 
-existing memories on variety of perceptual dimensions._
+_Figure 5: A representation of multiple memory traces in a Minerva model, in which a stimulus is being compared with existing memories on variety of perceptual dimensions._
 
 ![Minerva.png](images/Minerva.png)
 
