@@ -49,4 +49,8 @@ class Cortex:
         return self.long_term_memory.lookup(valence, arousal, dominance)
 
     def fuzzy_lookup(self, valence, arousal, dominance):
-        return self.sensory_memory.fuzzy_lookup(valence, arousal, dominance)
+        try:
+            word = self.sensory_memory.fuzzy_lookup(valence, arousal, dominance)
+            return word
+        except:
+            return ""

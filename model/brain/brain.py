@@ -66,12 +66,28 @@ class Brain:
 
     def recall(self, with_original):
         words = []
-        short_term_memory_contents, original_values, strengths = self.hippocampus.short_term_memory.retrieve(with_original)
-        for i in range(len(short_term_memory_contents)):
-            orig_valence, orig_arousal, orig_dominance = original_values[i]
-            original_word = self.cortex.sensory_memory.decode(orig_valence, orig_arousal, orig_dominance)
-            valence, arousal, dominance = short_term_memory_contents[i]
-            recalled_word = self.cortex.fuzzy_lookup(valence, arousal, dominance)
-            if recalled_word:
-                words.append([original_word, recalled_word, strengths[i]])
+        if with_original:
+            short_term_memory_contents, original_values, strengths = self.hippocampus.short_term_memory.retrieve(with_original)
+            for i in range(len(short_term_memory_contents)):
+                orig_valence, orig_arousal, orig_dominance = original_values[i]
+                original_word = self.cortex.sensory_memory.decode(orig_valence, orig_arousal, orig_dominance)
+                valence, arousal, dominance = short_term_memory_contents[i]
+                recalled_word = self.cortex.fuzzy_lookup(valence, arousal, dominance)
+                if recalled_word:
+                    words.append([original_word, recalled_word, strengths[i]])
+        else:
+            short_term_memory_contents= self.hippocampus.short_term_memory.retrieve(with_original)
+            for i in range(len(short_term_memory_contents)):
+                valence, arousal, dominance = short_term_memory_contents[i]
+                recalled_word = self.cortex.fuzzy_lookup(valence, arousal, dominance)
+                if recalled_word:
+                    for word in recalled_word:
+                        words.append(word)
         return words
+
+    def dump(self):
+        # output everything in short and long term memory
+        contents_of_stm = set(self.recall(False))
+        contents_of_ltm = self.cortex.long_term_memory.retrieve()
+
+        return contents_of_stm.union(contents_of_ltm)

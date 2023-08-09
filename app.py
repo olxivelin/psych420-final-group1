@@ -83,6 +83,24 @@ app_ui = ui.page_fluid(
         # ui.input_action_button("s2_toggle_trace", "Toggle Trace Log"),
         ui.output_ui("simulation_2_trace"),
 
+        ui.br(),
+        ui.hr(),
+        ui.hr(),
+        ui.br(),
+        get_markdown("simulation_3", report_path),
+        ui.br(),
+        ui.input_numeric(id="s3_num_trials", label="Number of trials in experiment", value=10, min=0, max=1000),
+        ui.input_action_button("run_simulation_3", "Re-Run Simulation"),
+        ui.br(),
+        ui.hr(),
+
+        ui.h4("Simulation 3 Results - Rundus"),
+        ui.h5("Average Probability of recall"),
+        ui.output_plot("simulation_3_recall_probs"),
+
+        ui.h5("Output Trace", id="s3-trace-header"),
+        ui.output_ui("simulation_3_trace"),
+
         ui.hr(),
         get_markdown("references", report_path),
 
@@ -95,6 +113,7 @@ def server(input: Inputs, output: Outputs, session: Session):
 
     s = reactive.Value(Simulation())
     s2 = reactive.Value(Simulation())
+    s3 = reactive.Value(Simulation())
 
     @reactive.Effect
     def run_simulation_1():
@@ -132,21 +151,6 @@ def server(input: Inputs, output: Outputs, session: Session):
         for line in s.get().data_monitor.trace_log_lines:
             log += f"{line} <br>"
         return log
-
-    # @reactive.Effect
-    # def _():
-    #     btn = input.toggle_trace()
-    #     if btn % 2 == 1:
-    #         trace = ui.output_ui(
-    #             "simulation_1_trace", simulation_1_trace(), 0, 100, 20
-    #         )
-    #         ui.insert_ui(
-    #             ui.div({"id": "s1-trace"}, trace),
-    #             selector="#s1-trace-header",
-    #             where="afterEnd",
-    #         )
-    #     elif btn > 0:
-    #         ui.remove_ui("#s1-trace")
 
     @output
     @render.text
@@ -262,21 +266,6 @@ def server(input: Inputs, output: Outputs, session: Session):
             log += f"{line} <br>"
         return log
 
-    # @reactive.Effect
-    # def _():
-    #     btn = input.toggle_trace()
-    #     if btn % 2 == 1:
-    #         trace = ui.output_ui(
-    #             "simulation_2_trace", simulation_2_trace(), 0, 100, 20
-    #         )
-    #         ui.insert_ui(
-    #             ui.div({"id": "s2-trace"}, trace),
-    #             selector="#s2-trace-header",
-    #             where="afterEnd",
-    #         )
-    #     elif btn > 0:
-    #         ui.remove_ui("#s2-trace")
-
     @output
     @render.text
     def simulation_2_rehearsal_words():
@@ -350,6 +339,49 @@ def server(input: Inputs, output: Outputs, session: Session):
 
         fig, ax = plt.subplots()
         ax.hist(x)
+        return fig
+
+    @reactive.Effect
+    def run_simulation_3():
+        input.run_simulation_3()
+
+        number_trials = input.s3_num_trials()
+
+        p = ui.Progress()
+        p.set(1 / 30, message="Simulating, please wait...")
+        s3.set(Simulation())
+        infile = Path(__file__).parent / "data/BRM-emot-submit.csv"
+        p.set(5 / 30, message="Loading sensory encodings, please wait...")
+        s2.get().preload(infile)
+        p.set(20 / 30, message="Simulating time passing, please wait...")
+        s2.get().run_rundus_inspired_experiment(infile, number_trials)
+        p.set(30 / 30, message="Completing experiment...")
+        p.close()
+
+    @output
+    @render.text
+    def simulation_3_trace():
+        log = ""
+        for line in s3.get().data_monitor.trace_log_lines:
+            log += f"{line} <br>"
+        return log
+
+    @output
+    @render.plot(alt="Probability of recalling rehearsed words")
+    def simulation_3_recall_probs():
+        plt.style.use('_mpl-gallery')
+
+        fig, ax = plt.subplots()
+
+        probs = s2.get().data_monitor.rundus_results_probabilities()
+        rundus_probs = []
+
+        ax.plot(range(1, len(probs) + 1), probs, linewidth=2.0, label="Model recall probability")
+
+        ax.plot(range(1, len(rundus_probs) + 1), probs, linewidth=2.0, label="Model recall probability")
+
+        ax.legend(loc="upper right")
+
         return fig
 
 

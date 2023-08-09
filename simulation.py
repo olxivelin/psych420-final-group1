@@ -3,6 +3,7 @@ from collections import namedtuple, defaultdict
 from enum import Enum, unique
 
 import csv
+import random
 
 
 # TODO: add graph outputs for the recall percentages
@@ -27,6 +28,7 @@ class DataMonitor:
         self.trace_log_lines = []
         self.data_points = defaultdict(lambda: defaultdict(list))
         self.max_ages = []
+        self.rundus_results = []
 
     def tick(self):
         self.elapsed_time += 1
@@ -111,6 +113,22 @@ class DataMonitor:
 
         return series
 
+    def stash_rundus_results(self, results):
+        self.rundus_results.append(results)
+
+    def rundus_results_probabilities(self):
+        remembered = [x[2] for x in self.rundus_results]
+
+        num_words = len(remembered[0])
+        num_trials = len(remembered)
+
+        probs = []
+        for i in range(num_words):
+            total_remembered_at_i_across_trials = sum([x[i] for x in remembered])
+            probs.append(total_remembered_at_i_across_trials / num_trials)
+
+        return probs
+
 
 class Simulation:
 
@@ -176,12 +194,14 @@ class Simulation:
             word_list = self.rehearsal_list
         return self.brain.remember_from_ltm(word_list)
 
-    def preload(self, data_file):
+    def preload(self, data_file, brain=None):
+        if brain is None:
+            brain = self.brain
         with open(data_file, newline='') as csvfile:
             word_reader = csv.DictReader(csvfile)
 
             for word_data in word_reader:
-                self.brain.preload(word_data["Word"],
+                brain.preload(word_data["Word"],
                                    float(word_data["Valence"]),
                                    float(word_data["Arousal"]),
                                    float(word_data["Dominance"]),
@@ -205,3 +225,54 @@ class Simulation:
     @stm_purge_strategy.setter
     def stm_purge_strategy(self, strategy):
         self.brain.hippocampus.short_term_memory.purge_strategy = strategy
+
+    def random_words(self, number):
+        return [random.choice(list(self.brain.cortex.sensory_memory.word_mapping.keys())) for i in range(number)]
+
+    def run_rundus_inspired_trial(self, distraction_level=0, total_time=200,
+                                  rehearsal_interval=5, fuzzy_threshold=0, max_words_per_second=4,
+                                  rehearsal_strategy="oldest_first", brain=None):
+        # 20 words (technically supposed to be nouns, but using words instead), presented for 5 seconds each.
+        # 5 second interval between words, free to rehearse any word as long
+        # as rehearsal filled the intervals. Recall the words in any order.
+
+        if brain is None:
+            brain = self.brain
+
+        word_list = self.random_words(20)
+
+        for word in word_list:
+            # presentation interval
+            for i in range(5):
+                for j in range(random.randint(1, max_words_per_second)):
+                    brain.rehearse(word)
+                brain.time_tick()
+
+            # rehearsal interval
+            for i in range(5):
+                stm_words = brain.hippocampus.short_term_memory.retrieve(False)
+                for j in range(random.randint(1, max_words_per_second)):
+                    brain.rehearse(brain.cortex.sensory_memory.decode(*stm_words[j % len(stm_words)]))
+                brain.time_tick()
+
+        recalled_words = brain.dump()
+
+        remembered_items = [0] * len(word_list)
+        for i in range(len(word_list)):
+            if word_list[i] in recalled_words:
+                remembered_items[i] = 1
+
+        extra_items = len(recalled_words) - sum(remembered_items)
+
+        return word_list, recalled_words, remembered_items, extra_items
+
+    def run_rundus_inspired_experiment(self, data_file, trials=10):
+        # run multiple trials
+
+        for trial in range(trials):
+            data_monitor = DataMonitor()
+            brain = Brain(data_monitor)
+            self.preload(data_file, brain=brain)
+            self.data_monitor.stash_rundus_results(self.run_rundus_inspired_trial(brain=brain))
+
+        return self.data_monitor.rundus_results

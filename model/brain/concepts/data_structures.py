@@ -178,3 +178,7 @@ class Factor:
         else:
             if not was_correct:
                 self._weight -= 0.0001
+
+    def retrieve_data(self):
+        value_data = self._tree.root.inorder([])  # returns list of tuples of value and word
+        return [x[1][0] for x in value_data]  # just return the list of words

@@ -5,9 +5,16 @@ if __name__ == '__main__':
     simulation = Simulation()
     # simulation.preload("./data/test.csv")
     simulation.preload("./data/BRM-emot-submit.csv")
-    simulation.run_1()
+    results = simulation.run_rundus_inspired_experiment("./data/BRM-emot-submit.csv", trials=10)
 
-    print(simulation.data_monitor.data_for_decay_factors())
+    for result in results:
+        word_list, recalled_words, remembered_items, extra = result
+        print(f"Word List {word_list}")
+        print(f"Recalled List {recalled_words}")
+        print(f"Remembered: {remembered_items}")
+        print(f"Extra Words: {extra}")
+
+    # print(simulation.data_monitor.data_for_decay_factors())
     # ltm = LongTermMemory()
     # stm = ShortTermMemory(ltm)
     # # sensory = SensoryMemory("./data/BRM-emot-submit.csv", stm)

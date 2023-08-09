@@ -41,6 +41,13 @@ class LongTermMemory:
         dominance_values = self._dominance_factor.closest_matches(dominance)
         return set(valence_values).intersection(set(arousal_values)).intersection(set(dominance_values))
 
+    def retrieve(self):
+        words_v = set(self._valence_factor.retrieve_data())
+        words_a = set(self._arousal_factor.retrieve_data())
+        words_d = set(self._dominance_factor.retrieve_data())
+
+        return words_v.intersection(words_a).intersection(words_d)
+
     # def learn(self, word, valence, arousal, dominance):
     #     self.prime(word, valence, arousal, dominance)
     #     return self.lookup(valence, arousal, dominance)
