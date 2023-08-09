@@ -15,13 +15,13 @@ app_ui = ui.page_fluid(
     #     ),
     ui.panel_main(
         get_markdown("background", report_path),
-        get_markdown("atkinson_shiffrin_model", report_path),
-        ui.output_ui(id="images"),
+        # get_markdown("atkinson_shiffrin_model", report_path),
+        # ui.output_ui(id="images", inline=False),
         # get_markdown("sensory_memory", report_path),
         # get_markdown("short_term_memory", report_path),
         # get_markdown("long_term_memory", report_path),
         # get_markdown("learning"),
-        get_markdown("our_model", report_path),
+        # get_markdown("our_model", report_path),
 
         get_markdown("simulation_1", report_path),
         ui.br(),
@@ -170,7 +170,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @output
     @render.ui
     def images() -> ui.Tag:
-        img = ui.img(src="Information_Processing_Model_-_Atkinson_&_Shiffrin.jpg", style="width: 400px;")
+        img = ui.img(src="Information_Processing_Model_-_Atkinson_&_Shiffrin.jpg", style="width: 400px; display: hidden;")
         return img
 
     @output
@@ -385,5 +385,5 @@ def server(input: Inputs, output: Outputs, session: Session):
         return fig
 
 
-static_dir = Path(__file__).parent / "report/images"
+static_dir = Path(__file__).parent / "report"
 app = App(app_ui, server, static_assets=static_dir)
