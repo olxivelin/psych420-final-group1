@@ -9,6 +9,7 @@ from simulation import Simulation
 report_path = Path(__file__).parent / "report"
 
 app_ui = ui.page_fluid(
+    ui.include_css(report_path / "report.css"),
     ui.panel_title('Memory Simulation'),  # 1
     # ui.layout_sidebar(
     #     ui.panel_sidebar(
