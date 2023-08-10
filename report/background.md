@@ -137,13 +137,13 @@ might be (in practice this turned out to not actually be very
 effective.. but we’ll discuss that more later on). The PAD (pleasure,
 arousal, dominance) model developed by Russell and Mehrabian tries 
 to characterize human emotional experiences along three dimensions 
-(see Figure 2) [(Russell & Mehrabian, 1977)](#russell-mehrabian-1977).
+(see [Figure 2](#figure-2)) [(Russell & Mehrabian, 1977)](#russell-mehrabian-1977).
 To encode stimuli with these dimensions we used 
 Warriner’s database of lexical norms [(Warriner et al., 2013)](#warriner-et-al-2013).
 
 <a id="figure-2"></a>_Figure 2: PAD (pleasure, arousal, dominance) model_
 
-![avd.png](images/avd.png)
+![PAD (pleasure, arousal, dominance) model](images/avd.png)
 
 ### Connectionist Models
 
@@ -154,7 +154,7 @@ we could have taken. Connectionist models have several advantages:
  - They’re able to represent different features of memory in a  
    hierarchical structure in a way that explains how we’re able to 
    integrate common features of semantic knowledge (e.g., a rose is 
-   a living thing, a flower, and it’s pretty). Figure 3 provides a  
+   a living thing, a flower, and it’s pretty). [Figure 3](#figure-3) provides a  
    good example of how information can be 
    hierarchically represented as a tree.
  - They’re able to represent that different types of long-term memory 
@@ -162,8 +162,8 @@ we could have taken. Connectionist models have several advantages:
    neocortex such that the learning rate of higher order integrations
    of knowledge and understanding vs. the simple memorization of 
    lists can be represented by distinct systems with their own 
-   learning rate. Figure 4 demonstrates how the same information from
-   Figure 3 can be represented as a neural network.  
+   learning rate. [Figure 4](#figure-4) demonstrates how the same information from
+   [Figure 3](#figure-3) can be represented as a neural network.  
 
 A limitation of connectionist models is that they’re prone to 
 catastrophic forgetting when they attempt to emulate learning and 
@@ -172,11 +172,11 @@ memorizing two interleaved lists of items) [(McClelland et al., 1995)](#mcclella
 
 <a id="figure-3"></a>_Figure 3: A tree-like hierarchical representation of semantic knowledge that forms the basis of connectionist models._ 
 
-![semantic_tree.png](images/semantic_tree.png)
+![A tree-like hierarchical representation of semantic knowledge](images/semantic_tree.png)
 
 <a id="figure-4"></a>_Figure 4: A neural network representation of semantic knowledge_
 
-![neural_tree.png](images/neural_network.png) 
+![A neural network representation of semantic knowledge(images/neural_network.png) 
 
 
 ### Minerva 2
@@ -189,14 +189,14 @@ the features of the stimulus will run through the network activating
 memory traces. The sum of these activations can be thought of as an 
 “echo”, and if the collective echo reaches a certain threshold the 
 system will “recognize” the stimuli, if the echo does not reach the 
-threshold, then it will not recognize the stimulus (Figure 5) [(Hintzman, 1984)](#hintzman-1984).
+threshold, then it will not recognize the stimulus ([Figure 5](#figure-5)) [(Hintzman, 1984)](#hintzman-1984).
 
 <a id="figure-5"></a>_Figure 5: A representation of multiple memory traces in a Minerva model, in which a stimulus is being compared with existing memories on variety of perceptual dimensions._
 
-![Minerva.png](images/Minerva.png)
+![A representation of multiple memory traces in a Minerva model](images/Minerva.png)
 
 
-### How we could improve our model:
+## How we could improve our model:
 
 Currently, our memory model examines drift along three affective 
 dimensions using a binary search tree to index words by their 
