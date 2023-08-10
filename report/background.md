@@ -19,16 +19,16 @@ focus may be indicated. Temporal lobe epilepsy represents
 approximately 2/3 of intractable seizure cases and throughout 
 the 20th century it became clear that performing bilateral 
 temporal lobectomies (as in the case of patient H.M.) resulted 
-in profound impairments to the patient's declarative memory.[1] 
+in profound impairments to the patient's declarative memory [(Téllez-Zenteno & Hernández-Ronquillo, 2012)](#téllez-zenteno-2012). 
 In the case of H.M. following the removal of most of his 
 hippocampus he could shake your hand and carry on a conversation, 
 but after you left the room and his thoughts drifted from your 
 encounter he'd have no memory that you were ever there. It was 
 this growing recognition of the role of different brain systems 
 being involved in short term vs. long term memory that inspired 
-Atkinson and Shiffrin's MSM (See Figure 1).[2]  
+Atkinson and Shiffrin's MSM ([See Figure 1](#figure-1)) [(Shiffrin & Atkinson, 1969)](#shiffrin-atkinson-1969).  
 
-_Figure 1: An overview of Atkinson and Shiffrin's Multi Store Model_
+<a id="figure-1"></a>_Figure 1: An overview of Atkinson and Shiffrin's Multi Store Model_
 
 ![Figure 1: An overview of Atkinson and Shiffrin's Multi Store Model](images/Information_Processing_Model_-_Atkinson_%26_Shiffrin.jpg)
 
@@ -44,7 +44,7 @@ Theoretical models of “selective attention” had their heyday in the
 to get their names into introductory psych textbooks… The common theme 
 amongst their models is that you’re not fully aware of everything 
 around you, some of the information your senses register is forgotten 
-before reaching other cognitive processes.[3] That there are limits to
+before reaching other cognitive processes [(Treisman, 1969)](#treisman-1969). That there are limits to
 our processing capacity is a theme that will appear again as we’re 
 discussing the short-term memory stage. 
 
@@ -53,7 +53,7 @@ discussing the short-term memory stage.
 
 Following George Miller’s rather poetic reports of how the magical 
 number seven was stalking and pursuing him throughout his work the 
-concept of “short-term” memory became widely established.[4] If you’re
+concept of “short-term” memory became widely established [(Miller, 1956)](#miller-1956). If you’re
 provided with a list of numbers or a list of random words, there’s a 
 limit to the number of items you can hold in your cognitive buffer 
 before new items will displace the old. As time goes by without 
@@ -61,28 +61,29 @@ rehearsal your memories of the list will begin to decay, and the
 items will become increasingly difficult to remember correctly. 
 With sufficient rehearsal, e.g., repeating a list over and over, it is
 possible to move memories into a more stable long-term storage from 
-which they can later be retrieved.[5]
+which they can later be retrieved [(Cowan, 2008)](#cowan-2008).
 
 #### Long Term Memory:
 
 The early work of Ebbinghaus demonstrates that while memories stored 
 in the long term stage are more enduring than those held in the 
 short-term stage the passage of time will make retrieval increasingly 
-difficult.[6] The retention of information can also be disrupted by 
+difficult [(Murre & Dros, 2015)](#murre-dros-2015). 
+The retention of information can also be disrupted by 
 the presence of similar or competing information, this can occur 
 proactively when previously acquired knowledge needs to be unlearned 
 e.g., you have to change your password because the university got 
-hacked…[7] Or it can occur retroactively when new information makes 
+hacked [(Bass & Oswald, 2014)](#bass-oswald-2014). Or it can occur retroactively when new information makes 
 it difficult to remember existing details e.g., after using Emacs 
 exclusively for 2 years you find you’ve forgotten the keyboard 
-shortcuts in Microsoft word.[8] 
+shortcuts in Microsoft Word [(Sosic-Vasic et al., 2018)](#sosic-vasic-et-al-2018).
 
 While the process of retrieval in the MSM model is typically 
 represented with memories being encoded as discrete units. 
 Modern theoretical understandings of “engrams” (i.e., units of 
 cognitive information) suggest that memories are distributed 
 throughout the brain with structures like the hippocampus acting 
-as an indexing agent.[9] In practice this means that different 
+as an indexing agent [(Teyler & Rudy, 2007)](#teyler-rudy-2007). In practice this means that different 
 aspects of memory like the logical semantic definition of a word 
 (e.g., murder = unjustifiable homicide) and the affective dimensions
 of that word (e.g., murder = bad) can be stored independently. 
@@ -91,22 +92,24 @@ Recall the temporal lesion patients that originally inspired the MSM.
 With further investigation it became clear that their anterograde 
 amnesia only affected certain memory domains. Patient H.M. for 
 instance became increasingly proficient at drawing stars in a mirror
-(a procedural memory task).[10] In another example Édouard Claparède 
+(a procedural memory task) [(Squire, 2009)](#squire-2009).
+In another example Édouard Claparède 
 was an early Swiss neurologist who is notorious for shaking the hand
 of one of his patient’s while holding a concealed pin. 
 Leaving and returning shortly thereafter he reports the patient had 
 forgotten the episodic details of the handshake but was unwilling to 
 shake Claparède’s hand a second time despite not having a clearly
 articulable reason for their hesitancy (an example of behavioral 
-conditioning).[11] The significance of these findings is that they 
+conditioning) [(Feinstein et al., 2010)](#feinstein-et-al-2010).
+The significance of these findings is that they 
 demonstrate that there are different forms of long term memory 
-that aren’t well represented as a single stage in the MSM.[12] 
+that aren’t well represented as a single stage in the MSM [(Fox et al., 2017)](#fox-et-al-2017).
 
 ### Emotion and Memory:
 
 The emotional dimensions of valence and arousal have been 
 demonstrated to engage distinct cognitive and neural processes 
-contributing to enhanced memory.[13] Brown and Kulik’s work on 
+contributing to enhanced memory [(Kensinger & Corkin, 2004)](#kensinger-corkin-2004). Brown and Kulik’s work on 
 “flashbulb memories” (i.e., memories of highly emotional episodic 
 events like 9/11 or the Challenger disaster) reinforced earlier 
 notions that emotional memories were indelible. Further research 
@@ -116,27 +119,29 @@ are necessarily accurate. Even the memories for the emotions
 themselves can be subject to manipulation, in one example students 
 asked to recall their emotional state before and after receiving an 
 exam grade will tend to overestimate their feelings of anxiety after 
-receiving a poor mark.[14] 
+receiving a poor mark [(Levine & Pizarro, 2004)](#levine-pizarro-2004). 
 
 ### Logic vs. Emotion:
 
 Prior memory models have investigated how semantic relatedness along 
-logical dimensions influences memory and learning.[15] 
+logical dimensions influences memory and learning [(McClelland et al., 1995)](#mcclelland-et-al-1995).
 We thought it would be interesting to instead explore how random 
 drift along affective dimensions could impact memory over time. 
 There is evidence that some material due to its affective dimensions 
 is more likely to be stored and recalled when one is in a particular 
-mood.[16] We wanted to explore the idea that when presented with a 
+mood [(Ucros, 1989)](#ucros-1989). We wanted to explore the idea that 
+when presented with a 
 stimulus if we encode the affective dimensions of that stimulus, how 
 effective a memory trace based on those emotional characteristics 
 might be (in practice this turned out to not actually be very 
 effective.. but we’ll discuss that more later on). The PAD (pleasure,
 arousal, dominance) model developed by Russell and Mehrabian tries 
 to characterize human emotional experiences along three dimensions 
-(see Figure 2).[17] To encode stimuli with these dimensions we used 
-Warriner’s database of lexical norms.[18]
+(see Figure 2) [(Russell & Mehrabian, 1977)](#russell-mehrabian-1977).
+To encode stimuli with these dimensions we used 
+Warriner’s database of lexical norms [(Warriner et al., 2013)](#warriner-et-al-2013).
 
-_Figure 2: PAD (pleasure, arousal, dominance) model_
+<a id="figure-2"></a>_Figure 2: PAD (pleasure, arousal, dominance) model_
 
 ![avd.png](images/avd.png)
 
@@ -149,7 +154,7 @@ we could have taken. Connectionist models have several advantages:
  - They’re able to represent different features of memory in a  
    hierarchical structure in a way that explains how we’re able to 
    integrate common features of semantic knowledge (e.g., a rose is 
-   a living thing, a flower and it’s pretty). Figure 3 provides a  
+   a living thing, a flower, and it’s pretty). Figure 3 provides a  
    good example of how information can be 
    hierarchically represented as a tree.
  - They’re able to represent that different types of long-term memory 
@@ -157,19 +162,19 @@ we could have taken. Connectionist models have several advantages:
    neocortex such that the learning rate of higher order integrations
    of knowledge and understanding vs. the simple memorization of 
    lists can be represented by distinct systems with their own 
-   learning rate. Figure 3 demonstrates how the same information from
-   Figure 4 can be represented as a neural network.  
+   learning rate. Figure 4 demonstrates how the same information from
+   Figure 3 can be represented as a neural network.  
 
 A limitation of connectionist models is that they’re prone to 
 catastrophic forgetting when they attempt to emulate learning and 
 memory on integrated learning tasks (e.g., tasks that require 
-memorizing two interleaved lists of items).[15]
+memorizing two interleaved lists of items) [(McClelland et al., 1995)](#mcclelland-et-al-1995).[15]
 
-_Figure 3: A tree-like hierarchical representation of semantic knowledge that forms the basis of connectionist models._ 
+<a id="figure-3"></a>_Figure 3: A tree-like hierarchical representation of semantic knowledge that forms the basis of connectionist models._ 
 
 ![semantic_tree.png](images/semantic_tree.png)
 
-_Figure 4: A neural network representation of semantic knowledge_
+<a id="figure-4"></a>_Figure 4: A neural network representation of semantic knowledge_
 
 ![neural_tree.png](images/neural_network.png) 
 
@@ -184,9 +189,9 @@ the features of the stimulus will run through the network activating
 memory traces. The sum of these activations can be thought of as an 
 “echo”, and if the collective echo reaches a certain threshold the 
 system will “recognize” the stimuli, if the echo does not reach the 
-threshold, then it will not recognize the stimulus (Figure 5).[19]
+threshold, then it will not recognize the stimulus (Figure 5) [(Hintzman, 1984)](#hintzman-1984).
 
-_Figure 5: A representation of multiple memory traces in a Minerva model, in which a stimulus is being compared with existing memories on variety of perceptual dimensions._
+<a id="figure-5"></a>_Figure 5: A representation of multiple memory traces in a Minerva model, in which a stimulus is being compared with existing memories on variety of perceptual dimensions._
 
 ![Minerva.png](images/Minerva.png)
 
@@ -207,7 +212,8 @@ approximates biological memory.
 Recent work on human lexical development has found that the affective
 dimensions of words are much less useful for predicting the 
 development and evolution of language than other types of semantic 
-knowledge like logical associations.[20] In their paper Brochhagen 
+knowledge like logical associations [(Brochhagen et al., 2023)](#brochhagen-et-al-2023). 
+In their paper Brochhagen 
 used the same lexical database from Warriner that we did to classify 
 the affective characteristics of words, but being savvier than us 
 they were able to integrate with several other existing databases 
@@ -221,7 +227,7 @@ dimensions like the associativity of words. Drawing inspiration from
 these other models, instead of using binary search trees for three 
 emotional dimensions we could use a multidimensional or kd-tree in 
 which all the semantic properties of the words were represented in 
-different dimensions.[21]
+different dimensions [(Ram & Sinha, 2019)](#ram-sinha-2019).
 
 The nearest neighbors search algorithm for kd-trees operates 
 similarly to a binary search tree with a few exceptions. The 
