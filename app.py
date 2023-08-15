@@ -17,6 +17,8 @@ app_ui = ui.page_fluid(
     ui.panel_main(
         get_markdown("background", report_path),
 
+        get_markdown("model", report_path),
+
         get_markdown("simulation_1", report_path),
         ui.br(),
         ui.input_slider(id="distraction_level", label="Distraction Level", value=20, min=0, max=100),
