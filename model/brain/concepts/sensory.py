@@ -5,11 +5,22 @@ from .data_structures import Factor
 class SensoryMemory:
 
     def __init__(self, data_monitor, fuzzy_threshold=0.03):
+        # We have a list of all the words that we can sense
+        # so that we know what to process on "sensing".
         self.word_mapping = {}
+        # We've also added the tree representation to Sensory Memory so that we
+        # could do fuzzy lookups without re-implementing. It seems like a
+        # hacky thing to do.
         self._valence_factor = Factor(data_monitor)
         self._dominance_factor = Factor(data_monitor)
         self._arousal_factor = Factor(data_monitor)
+
+        # data monitor is for simulation purposes to be able to log
+        # as processing happens.
         self.data_monitor = data_monitor
+
+        # fuzzy threshold is a dial that can be tweaked in the simulation
+        # to indicate how much drift will interfere with lookups.
         self._fuzzy_threshold = fuzzy_threshold
 
     def __str__(self):

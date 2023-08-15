@@ -1,12 +1,11 @@
 from random import random, randint
 
-# TODO: find a value that makes sense for this, what does the research say?
 STRENGTH_THRESHOLD = 10  # how strong the memory in stm has to be before it is moved to LTM
 STRENGTH_BOOST = 2.2  # how much to boost the strength if this is an item already in LTM
 STRENGTH_INCREMENT = 1  # how much to increase strength each time an item already in STM is added again
 # TODO: Rate of decay -> should be rapid for first 18 seconds - Peterson and Peterson (1959)
 #  https://psycnet-apa-org.proxy.lib.uwaterloo.ca/fulltext/1960-05499-001.pdf
-#  exponential decay perhaps?
+#  implement exponential decay perhaps rather than constant?
 STRENGTH_DECREMENT = 1  # how much to decrease strength each second
 
 
@@ -164,7 +163,7 @@ class ShortTermMemory:
     def fuzz(self, memory):
         max_duration = self.current_max_duration()
 
-        # TODO: Adjust this factor to be more realistic. Find data.
+        # TODO: Adjust this factor to be more realistic. Find data?
         fuzz_factor = (1 / ((max_duration - memory.age) or 1) ** 2)
 
         updated_value = (memory.value[0] + fuzz_factor, memory.value[1] + fuzz_factor, memory.value[2] + fuzz_factor)

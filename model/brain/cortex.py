@@ -39,9 +39,9 @@ class Cortex:
         return self.sensory_memory.sense()
 
     def store_memory(self, memory):
-        # TODO: should we do something with the strength, age at the point we
+        # TODO: We should do something with the strength, age at the point we
         # are transferring from short term to long term memory
-        meaning = self.sensory_memory.decode(*memory.original_value)
+        meaning = self.fuzzy_lookup(*memory.original_value)
         self.data_monitor.log(f"Storing Meaning {meaning}, values {memory.value}")
         self.long_term_memory.prime(meaning, *memory.value)
 
