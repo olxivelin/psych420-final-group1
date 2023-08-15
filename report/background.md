@@ -37,7 +37,7 @@ is divided into 3 stages. Sensory Memory -> Short-Term Memory <->
 Long Term Memory. 
 
 
-#### Sensory Memory:
+#### Sensory Memory
 
 Theoretical models of “selective attention” had their heyday in the 
 1960’s as the researchers Broadbent, Treisman, and Deutsch competed 
@@ -49,7 +49,7 @@ our processing capacity is a theme that will appear again as we’re
 discussing the short-term memory stage. 
 
 
-#### Short Term Memory: 
+#### Short Term Memory
 
 Following George Miller’s rather poetic reports of how the magical 
 number seven was stalking and pursuing him throughout his work the 
@@ -63,7 +63,7 @@ With sufficient rehearsal, e.g., repeating a list over and over, it is
 possible to move memories into a more stable long-term storage from 
 which they can later be retrieved [(Cowan, 2008)](#cowan-2008).
 
-#### Long Term Memory:
+#### Long Term Memory
 
 The early work of Ebbinghaus demonstrates that while memories stored 
 in the long term stage are more enduring than those held in the 
@@ -105,7 +105,7 @@ The significance of these findings is that they
 demonstrate that there are different forms of long term memory 
 that aren’t well represented as a single stage in the MSM [(Fox et al., 2017)](#fox-et-al-2017).
 
-### Emotion and Memory:
+### Emotion and Memory
 
 The emotional dimensions of valence and arousal have been 
 demonstrated to engage distinct cognitive and neural processes 
@@ -121,7 +121,7 @@ asked to recall their emotional state before and after receiving an
 exam grade will tend to overestimate their feelings of anxiety after 
 receiving a poor mark [(Levine & Pizarro, 2004)](#levine-pizarro-2004). 
 
-### Logic vs. Emotion:
+### Logic vs. Emotion
 
 Prior memory models have investigated how semantic relatedness along 
 logical dimensions influences memory and learning [(McClelland et al., 1995)](#mcclelland-et-al-1995).
