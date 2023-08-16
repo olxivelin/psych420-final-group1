@@ -14,6 +14,12 @@ app_ui = ui.page_fluid(
     # ui.layout_sidebar(
     #     ui.panel_sidebar(
     #     ),
+    # This is the added navigation list---------------
+    ui.navset_pill_list(
+        ui.nav("a", "tab a content"),
+        ui.nav("b", "tab b content"),
+    )
+    #Testing navigation ----------------------
     ui.panel_main(
         get_markdown("background", report_path),
 
