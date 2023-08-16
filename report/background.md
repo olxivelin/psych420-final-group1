@@ -104,7 +104,7 @@ conditioning) [(Feinstein et al., 2010)](#feinstein-et-al-2010).
 The significance of these findings is that they 
 demonstrate that there are different forms of long term memory 
 that aren’t well represented as a single stage in the MSM [(Fox et al., 2017)](#fox-et-al-2017).
-
+<!--
 ### Emotion and Memory
 
 The emotional dimensions of valence and arousal have been 
@@ -194,3 +194,4 @@ threshold, then it will not recognize the stimulus ([Figure 5](#figure-5)) [(Hin
 <a id="figure-5"></a>_Figure 5: A representation of multiple memory traces in a Minerva model, in which a stimulus is being compared with existing memories on variety of perceptual dimensions._
 
 ![A representation of multiple memory traces in a Minerva model](images/Minerva.png)
+-->
